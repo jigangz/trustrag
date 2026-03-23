@@ -1,0 +1,11 @@
+fastapi==0.115.0
+uvicorn==0.30.0
+sqlalchemy==2.0.35
+asyncpg==0.30.0
+pgvector==0.3.5
+pdfplumber==0.11.4
+openai==1.55.0
+python-multipart==0.0.12
+pydantic-settings==2.6.0
+python-dotenv==1.0.1
+httpx==0.28.0

@@ -9,8 +9,8 @@ class Settings(BaseSettings):
 
     # Groq (free tier — powers both LLM generation and trust verification)
     groq_api_key: str = ""
-    groq_model: str = "llama-3.1-70b-versatile"
-    llm_model: str = "llama-3.1-70b-versatile"
+    groq_model: str = "llama-3.3-70b-versatile"
+    llm_model: str = "llama-3.3-70b-versatile"
 
     # Local embeddings (fastembed, no API key needed)
     embedding_dimension: int = 384

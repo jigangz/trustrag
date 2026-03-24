@@ -105,7 +105,7 @@ async def ask_question(
                  sources, hallucination_flags, consistency_check, score_breakdown)
             VALUES
                 (:id, :query, :answer, :score, :level,
-                 :sources::jsonb, :hall_flags::jsonb, :consistency::jsonb, :breakdown::jsonb)
+                 CAST(:sources AS jsonb), CAST(:hall_flags AS jsonb), CAST(:consistency AS jsonb), CAST(:breakdown AS jsonb))
         """),
         {
             "id": audit_id,

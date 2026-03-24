@@ -38,7 +38,7 @@ class Chunk(Base):
     content = Column(Text, nullable=False)
     page_number = Column(Integer, nullable=False)
     chunk_index = Column(Integer, nullable=False)
-    embedding = Column(Vector(1536))  # text-embedding-3-small dimension
+    embedding = Column(Vector(384))  # BAAI/bge-small-en-v1.5 dimension
 
     document = relationship("Document", back_populates="chunks")
 

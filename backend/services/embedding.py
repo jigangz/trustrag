@@ -1,24 +1,15 @@
-"""OpenAI embedding service for text vectorization."""
+"""Local embedding service using fastembed (no API key needed)."""
 
-from openai import AsyncOpenAI
-from config import settings
+from fastembed import TextEmbedding
 
-client = AsyncOpenAI(api_key=settings.openai_api_key)
+_model = TextEmbedding("BAAI/bge-small-en-v1.5")
 
 
 async def embed_text(text: str) -> list[float]:
     """Generate an embedding vector for a single text string."""
-    response = await client.embeddings.create(
-        model=settings.embedding_model,
-        input=text,
-    )
-    return response.data[0].embedding
+    return list(_model.embed([text]))[0].tolist()
 
 
 async def embed_batch(texts: list[str]) -> list[list[float]]:
-    """Generate embeddings for multiple texts in a single API call."""
-    response = await client.embeddings.create(
-        model=settings.embedding_model,
-        input=texts,
-    )
-    return [item.embedding for item in response.data]
+    """Generate embeddings for multiple texts."""
+    return [e.tolist() for e in _model.embed(texts)]

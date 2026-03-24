@@ -7,14 +7,13 @@ class Settings(BaseSettings):
     # Database
     database_url: str = "postgresql://trustrag:trustrag@db:5432/trustrag"
 
-    # OpenAI
-    openai_api_key: str = ""
-    embedding_model: str = "text-embedding-3-small"
-    llm_model: str = "gpt-4o-mini"
-
-    # Groq (for hallucination detection & consistency checks)
+    # Groq (free tier — powers both LLM generation and trust verification)
     groq_api_key: str = ""
     groq_model: str = "llama-3.1-70b-versatile"
+    llm_model: str = "llama-3.1-70b-versatile"
+
+    # Local embeddings (fastembed, no API key needed)
+    embedding_dimension: int = 384
 
     # Chunking
     chunk_size: int = 500  # tokens per chunk

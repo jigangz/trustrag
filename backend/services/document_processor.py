@@ -10,13 +10,16 @@ import io
 import re
 
 import pdfplumber
-import tiktoken
 
-_enc = tiktoken.get_encoding("cl100k_base")
+try:
+    import tiktoken
+    _enc = tiktoken.get_encoding("cl100k_base")
 
-
-def _token_len(text: str) -> int:
-    return len(_enc.encode(text))
+    def _token_len(text: str) -> int:
+        return len(_enc.encode(text))
+except ImportError:
+    def _token_len(text: str) -> int:
+        return int(len(text.split()) * 1.3)
 
 
 async def parse_pdf(file_bytes: bytes) -> list[dict]:

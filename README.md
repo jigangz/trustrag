@@ -8,6 +8,15 @@ Construction teams are told to adopt AI, but most tools hallucinate, cite wrong 
 
 **TrustRAG doesn't just answer questions — it proves why you should trust the answer.**
 
+## Completely Free to Run
+
+TrustRAG requires **no paid API keys**:
+- **LLM**: Groq (free tier) — Llama 3.1 70B for generation and trust verification
+- **Embeddings**: fastembed (local) — BAAI/bge-small-en-v1.5 runs on CPU, no API key needed
+- **Vector Store**: pgvector (self-hosted via Docker)
+
+You only need a free [Groq API key](https://console.groq.com).
+
 ## Features
 
 - **Document Ingestion** — Upload PDF manuals, specs, and safety documents. Automatically parsed, chunked, and embedded.
@@ -21,11 +30,11 @@ Construction teams are told to adopt AI, but most tools hallucinate, cite wrong 
 ## Architecture
 
 ```
-User uploads PDF → Parse & chunk → Embed (OpenAI) → Store (pgvector)
-                                                        ↓
-User asks question → Retrieve top-k chunks → LLM generates answer → Trust verification → Response with audit
-                                                                          ↓
-                                                                   Audit log (PostgreSQL)
+User uploads PDF → Parse & chunk → Embed locally (fastembed) → Store (pgvector)
+                                                                    ↓
+User asks question → Retrieve top-k chunks → LLM generates answer (Groq) → Trust verification → Response with audit
+                                                                                  ↓
+                                                                           Audit log (PostgreSQL)
 ```
 
 ## Tech Stack
@@ -33,8 +42,8 @@ User asks question → Retrieve top-k chunks → LLM generates answer → Trust 
 | Layer | Technology |
 |-------|-----------|
 | Backend | FastAPI (Python) |
-| LLM | OpenAI / Anthropic API |
-| Embeddings | text-embedding-3-small |
+| LLM | Groq (Llama 3.1 70B) — free tier |
+| Embeddings | fastembed (BAAI/bge-small-en-v1.5) — local, no API key |
 | Vector Store | pgvector (PostgreSQL) |
 | Frontend | React (Vite) + Tailwind CSS |
 | Audit Storage | PostgreSQL |
@@ -50,7 +59,7 @@ cd trustrag
 
 # Configure
 cp .env.example .env
-# Add your OpenAI API key to .env
+# Add your free Groq API key to .env
 
 # Run
 docker-compose up --build
@@ -82,9 +91,9 @@ docker-compose up --build
 
 ### Confidence Levels
 
-- 🟢 **80-100** — High confidence. Answer verified against multiple sources.
-- 🟡 **50-79** — Medium confidence. Limited sources or partial coverage. Human review recommended.
-- 🔴 **0-49** — Low confidence. Insufficient evidence or potential hallucination detected. Do not use without manual verification.
+- **80-100** — High confidence. Answer verified against multiple sources.
+- **50-79** — Medium confidence. Limited sources or partial coverage. Human review recommended.
+- **0-49** — Low confidence. Insufficient evidence or potential hallucination detected. Do not use without manual verification.
 
 ## Project Structure
 
@@ -101,9 +110,9 @@ trustrag/
 │   │   └── audit.py               # Audit trail endpoints
 │   ├── services/
 │   │   ├── document_processor.py  # PDF parsing & chunking
-│   │   ├── embedding.py           # OpenAI embedding service
+│   │   ├── embedding.py           # Local embedding (fastembed)
 │   │   ├── vector_store.py        # pgvector operations
-│   │   ├── rag_engine.py          # Retrieval + LLM generation
+│   │   ├── rag_engine.py          # Retrieval + LLM generation (Groq)
 │   │   ├── trust_verifier.py      # Confidence scoring + hallucination detection
 │   │   └── consistency_checker.py # Answer consistency validation
 │   ├── requirements.txt

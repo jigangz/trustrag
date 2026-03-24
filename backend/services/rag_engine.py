@@ -12,7 +12,10 @@ import re
 from openai import AsyncOpenAI
 from config import settings
 
-client = AsyncOpenAI(api_key=settings.openai_api_key)
+client = AsyncOpenAI(
+    base_url="https://api.groq.com/openai/v1",
+    api_key=settings.groq_api_key,
+)
 
 SYSTEM_PROMPT = """You are a precise document assistant for construction safety.
 Answer the question using ONLY the provided source documents.

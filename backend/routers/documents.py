@@ -48,7 +48,7 @@ async def upload_document(
     if not chunks:
         raise HTTPException(status_code=400, detail="No text chunks generated from PDF")
 
-    # 4. Generate embeddings via OpenAI
+    # 4. Generate embeddings via fastembed (local)
     try:
         texts = [c["content"] for c in chunks]
         embeddings = await embed_batch(texts)

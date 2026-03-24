@@ -15,9 +15,11 @@ export function useAudit() {
     try {
       setLoading(true);
       const res = await axios.get(`${API}/api/audit`, {
-        params: { page: pageNum, page_size: pageSize },
+        params: { limit: pageSize, offset: (pageNum - 1) * pageSize },
       });
       const data = res.data.entries || res.data || [];
+      // normalize field names
+      data.forEach((e) => { if (!e.question && e.query) e.question = e.query; });
       if (pageNum === 1) {
         setEntries(data);
       } else {

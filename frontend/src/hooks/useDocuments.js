@@ -30,7 +30,7 @@ export function useDocuments() {
       setUploading(true);
       setUploadProgress(0);
       setError(null);
-      const res = await axios.post(`${API}/api/documents`, formData, {
+      const res = await axios.post(`${API}/api/documents/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (e) => {
           const pct = Math.round((e.loaded * 100) / (e.total || 1));

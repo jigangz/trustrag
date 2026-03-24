@@ -2,9 +2,10 @@ import React from "react";
 import { FileText, Hash } from "lucide-react";
 
 export default function SourceCard({ source }) {
-  const { document_name, page_number, text, similarity_score } = source || {};
+  const { document, document_name, page, page_number, text, similarity, similarity_score } = source || {};
 
-  const simPct = similarity_score != null ? Math.round(similarity_score * 100) : null;
+  const rawSim = similarity_score != null ? similarity_score : similarity;
+  const simPct = rawSim != null ? Math.round(rawSim * 100) : null;
   const simColor =
     simPct >= 80 ? "text-emerald-400" : simPct >= 50 ? "text-amber-400" : "text-red-400";
 
@@ -14,7 +15,7 @@ export default function SourceCard({ source }) {
         <div className="flex items-center gap-2 min-w-0">
           <FileText className="w-4 h-4 text-slate-500 flex-shrink-0" />
           <span className="text-sm font-medium text-slate-200 truncate">
-            {document_name || "Unknown Document"}
+            {document_name || document || "Unknown Document"}
           </span>
         </div>
         {simPct != null && (
@@ -24,10 +25,10 @@ export default function SourceCard({ source }) {
         )}
       </div>
 
-      {page_number != null && (
+      {(page_number != null || page != null) && (
         <div className="flex items-center gap-1 text-xs text-slate-500 mb-2">
           <Hash className="w-3 h-3" />
-          Page {page_number}
+          Page {page_number || page}
         </div>
       )}
 

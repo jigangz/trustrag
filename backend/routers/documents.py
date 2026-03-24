@@ -61,8 +61,8 @@ async def upload_document(
     doc_id = str(uuid.uuid4())
     await session.execute(
         text("""
-            INSERT INTO documents (id, filename, total_pages, total_chunks)
-            VALUES (:id, :filename, :pages, :chunks)
+            INSERT INTO documents (id, filename, uploaded_at, total_pages, total_chunks)
+            VALUES (:id, :filename, NOW(), :pages, :chunks)
         """),
         {
             "id": doc_id,

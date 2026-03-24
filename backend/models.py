@@ -96,6 +96,6 @@ class DocumentResponse(BaseModel):
     """Document metadata for API responses."""
     id: str
     filename: str
-    uploaded_at: datetime
+    uploaded_at: datetime | None = None
     total_pages: int
     total_chunks: int

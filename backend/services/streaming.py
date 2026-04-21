@@ -90,14 +90,16 @@ class QueryTask:
             await self._emit_error(ws, code="INTERNAL", message=str(e))
 
     async def _retrieve(self) -> list[dict]:
-        """Retrieve relevant chunks via semantic search."""
+        """Retrieve relevant chunks via hybrid search (semantic + keyword)."""
         from database import async_session
         from services.embedding import embed_text
-        from services.vector_store import search_similar
+        from services.vector_store import hybrid_search
 
         async with async_session() as session:
             query_embedding = await embed_text(self.text)
-            chunks = await search_similar(session, query_embedding, top_k=self.top_k)
+            chunks = await hybrid_search(
+                session, query_embedding, self.text, top_k=self.top_k
+            )
         return chunks
 
     async def _generate_stream(self, sources: list[dict]) -> AsyncIterator[str]:

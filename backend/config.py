@@ -22,6 +22,13 @@ class Settings(BaseSettings):
     # Retrieval
     top_k: int = 5
 
+    # Hybrid search
+    hybrid_enabled: bool = True
+    semantic_candidates: int = 20
+    keyword_candidates: int = 20
+    rrf_k: int = 60
+    final_top_k: int = 5
+
     class Config:
         env_file = ".env"
 

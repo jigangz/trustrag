@@ -19,3 +19,8 @@ dist/
 # Data
 *.pdf
 uploads/
+
+# Ralph Loop (local-only automation; per Harry 2026-04-20)
+plans/
+scripts/ralph/
+.claude/

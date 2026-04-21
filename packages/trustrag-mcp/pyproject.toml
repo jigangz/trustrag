@@ -1,0 +1,36 @@
+[project]
+name = "trustrag-mcp"
+version = "0.1.0"
+description = "MCP server for TrustRAG — trust-verified RAG exposed as tools for Claude Desktop, Cursor, and other MCP clients"
+authors = [{ name = "Jigang Zhou", email = "zjg0907008@gmail.com" }]
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+keywords = ["mcp", "rag", "trust", "claude", "anthropic"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "mcp>=0.9",
+    "httpx>=0.27",
+    "pydantic>=2",
+]
+
+[project.scripts]
+trustrag-mcp = "trustrag_mcp.__main__:main"
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-asyncio"]
+
+[project.urls]
+Homepage = "https://github.com/jigangz/TrustRAG"
+Repository = "https://github.com/jigangz/TrustRAG"
+Issues = "https://github.com/jigangz/TrustRAG/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

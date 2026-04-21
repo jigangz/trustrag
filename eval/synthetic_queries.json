@@ -1,0 +1,216 @@
+{
+  "version": "1.0",
+  "description": "30 synthetic queries for TrustRAG hybrid retrieval benchmark (Phase 2)",
+  "queries": [
+    {
+      "id": "Q001",
+      "text": "What is the minimum height threshold for fall protection in construction?",
+      "category": "semantic",
+      "ground_truth_chunk_ids": ["c_042", "c_087"],
+      "expected_answer_substring": "6 feet"
+    },
+    {
+      "id": "Q002",
+      "text": "How should employers protect workers from electrical hazards on job sites?",
+      "category": "semantic",
+      "ground_truth_chunk_ids": ["c_103", "c_104"],
+      "expected_answer_substring": "de-energize"
+    },
+    {
+      "id": "Q003",
+      "text": "What are the requirements for personal protective equipment in hazardous environments?",
+      "category": "semantic",
+      "ground_truth_chunk_ids": ["c_055", "c_056"],
+      "expected_answer_substring": "PPE"
+    },
+    {
+      "id": "Q004",
+      "text": "How do you prevent heat-related illnesses for outdoor workers?",
+      "category": "semantic",
+      "ground_truth_chunk_ids": ["c_120", "c_121"],
+      "expected_answer_substring": "water"
+    },
+    {
+      "id": "Q005",
+      "text": "What training is required before workers enter confined spaces?",
+      "category": "semantic",
+      "ground_truth_chunk_ids": ["c_078", "c_079"],
+      "expected_answer_substring": "permit"
+    },
+    {
+      "id": "Q006",
+      "text": "How should hazardous chemicals be stored in the workplace?",
+      "category": "semantic",
+      "ground_truth_chunk_ids": ["c_091", "c_092"],
+      "expected_answer_substring": "labeled"
+    },
+    {
+      "id": "Q007",
+      "text": "What are the employer obligations for workplace injury recordkeeping?",
+      "category": "semantic",
+      "ground_truth_chunk_ids": ["c_130", "c_131"],
+      "expected_answer_substring": "OSHA 300"
+    },
+    {
+      "id": "Q008",
+      "text": "How should scaffolding be inspected before each work shift?",
+      "category": "semantic",
+      "ground_truth_chunk_ids": ["c_044", "c_045"],
+      "expected_answer_substring": "competent person"
+    },
+    {
+      "id": "Q009",
+      "text": "What respiratory protection is needed when working with silica dust?",
+      "category": "semantic",
+      "ground_truth_chunk_ids": ["c_110", "c_111"],
+      "expected_answer_substring": "respirator"
+    },
+    {
+      "id": "Q010",
+      "text": "How do employers create an effective safety training program?",
+      "category": "semantic",
+      "ground_truth_chunk_ids": ["c_140", "c_141"],
+      "expected_answer_substring": "training"
+    },
+    {
+      "id": "Q011",
+      "text": "OSHA 1926.501",
+      "category": "keyword",
+      "ground_truth_chunk_ids": ["c_042"],
+      "expected_answer_substring": "fall protection"
+    },
+    {
+      "id": "Q012",
+      "text": "29 CFR 1910.134",
+      "category": "keyword",
+      "ground_truth_chunk_ids": ["c_110"],
+      "expected_answer_substring": "respiratory"
+    },
+    {
+      "id": "Q013",
+      "text": "OSHA Form 300A",
+      "category": "keyword",
+      "ground_truth_chunk_ids": ["c_130"],
+      "expected_answer_substring": "summary"
+    },
+    {
+      "id": "Q014",
+      "text": "1926.451 scaffolding",
+      "category": "keyword",
+      "ground_truth_chunk_ids": ["c_044"],
+      "expected_answer_substring": "scaffold"
+    },
+    {
+      "id": "Q015",
+      "text": "GHS hazard communication",
+      "category": "keyword",
+      "ground_truth_chunk_ids": ["c_091"],
+      "expected_answer_substring": "label"
+    },
+    {
+      "id": "Q016",
+      "text": "OSHA 1910.146 permit-required confined spaces",
+      "category": "keyword",
+      "ground_truth_chunk_ids": ["c_078"],
+      "expected_answer_substring": "permit"
+    },
+    {
+      "id": "Q017",
+      "text": "Table 1 silica standard",
+      "category": "keyword",
+      "ground_truth_chunk_ids": ["c_111"],
+      "expected_answer_substring": "exposure"
+    },
+    {
+      "id": "Q018",
+      "text": "OSHA 1926.502 guardrail systems",
+      "category": "keyword",
+      "ground_truth_chunk_ids": ["c_087"],
+      "expected_answer_substring": "42 inches"
+    },
+    {
+      "id": "Q019",
+      "text": "NIOSH heat index guidelines",
+      "category": "keyword",
+      "ground_truth_chunk_ids": ["c_120"],
+      "expected_answer_substring": "heat"
+    },
+    {
+      "id": "Q020",
+      "text": "lockout tagout 1910.147",
+      "category": "keyword",
+      "ground_truth_chunk_ids": ["c_103"],
+      "expected_answer_substring": "energy"
+    },
+    {
+      "id": "Q021",
+      "text": "What PPE does OSHA 1926.501 require for workers at heights above 6 feet?",
+      "category": "hybrid",
+      "ground_truth_chunk_ids": ["c_042", "c_055"],
+      "expected_answer_substring": "harness"
+    },
+    {
+      "id": "Q022",
+      "text": "How does 29 CFR 1910.134 define a respiratory protection program?",
+      "category": "hybrid",
+      "ground_truth_chunk_ids": ["c_110", "c_111"],
+      "expected_answer_substring": "fit test"
+    },
+    {
+      "id": "Q023",
+      "text": "What are the confined space rescue procedures under 1910.146?",
+      "category": "hybrid",
+      "ground_truth_chunk_ids": ["c_078", "c_079"],
+      "expected_answer_substring": "rescue"
+    },
+    {
+      "id": "Q024",
+      "text": "How should employers implement lockout/tagout per 1910.147 to prevent electrical injuries?",
+      "category": "hybrid",
+      "ground_truth_chunk_ids": ["c_103", "c_104"],
+      "expected_answer_substring": "lockout"
+    },
+    {
+      "id": "Q025",
+      "text": "What does OSHA 1926.451 require for scaffold platform width and guardrails?",
+      "category": "hybrid",
+      "ground_truth_chunk_ids": ["c_044", "c_045"],
+      "expected_answer_substring": "platform"
+    },
+    {
+      "id": "Q026",
+      "text": "How do GHS labels and SDS sheets help prevent chemical exposure incidents?",
+      "category": "hybrid",
+      "ground_truth_chunk_ids": ["c_091", "c_092"],
+      "expected_answer_substring": "safety data"
+    },
+    {
+      "id": "Q027",
+      "text": "What heat illness prevention measures does NIOSH recommend for construction workers?",
+      "category": "hybrid",
+      "ground_truth_chunk_ids": ["c_120", "c_121"],
+      "expected_answer_substring": "acclimatization"
+    },
+    {
+      "id": "Q028",
+      "text": "How should OSHA 300 logs document silica-related respiratory illness cases?",
+      "category": "hybrid",
+      "ground_truth_chunk_ids": ["c_130", "c_111"],
+      "expected_answer_substring": "record"
+    },
+    {
+      "id": "Q029",
+      "text": "What training requirements exist under 1926.502 for guardrail system installers?",
+      "category": "hybrid",
+      "ground_truth_chunk_ids": ["c_087", "c_140"],
+      "expected_answer_substring": "competent"
+    },
+    {
+      "id": "Q030",
+      "text": "How do OSHA's electrical safety standards 1910.333 interact with PPE requirements?",
+      "category": "hybrid",
+      "ground_truth_chunk_ids": ["c_103", "c_055"],
+      "expected_answer_substring": "insulated"
+    }
+  ]
+}

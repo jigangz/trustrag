@@ -8,6 +8,7 @@ Orchestrates the full pipeline:
 """
 
 import re
+from typing import AsyncIterator
 
 from openai import AsyncOpenAI
 from config import settings
@@ -86,3 +87,33 @@ async def generate_answer(question: str, context_chunks: list[dict]) -> dict:
         "sources_used": citations,
         "raw_response": response.model_dump(),
     }
+
+
+async def generate_answer_stream(
+    question: str, context_chunks: list[dict]
+) -> AsyncIterator[str]:
+    """
+    Stream answer tokens from Groq, yielding one token at a time.
+
+    Uses the same prompt construction as generate_answer but with stream=True.
+    Raises openai.RateLimitError on Groq 429.
+    """
+    context = _build_context(context_chunks)
+
+    response = await client.chat.completions.create(
+        model=settings.llm_model,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": f"Context:\n{context}\n\nQuestion: {question}",
+            },
+        ],
+        temperature=0.2,
+        max_tokens=1024,
+        stream=True,
+    )
+
+    async for chunk in response:
+        if chunk.choices and chunk.choices[0].delta.content:
+            yield chunk.choices[0].delta.content

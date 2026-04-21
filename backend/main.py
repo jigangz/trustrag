@@ -4,6 +4,7 @@ FastAPI application entry point. Initializes the database,
 registers routers, and configures CORS for the React frontend.
 """
 
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -27,10 +28,23 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Allow React dev server
+# CORS — dev + production. Override via CORS_ORIGINS env (comma-separated).
+_default_origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://trustrag.vercel.app",
+]
+_env_origins = os.getenv("CORS_ORIGINS", "")
+_allowed_origins = (
+    [o.strip() for o in _env_origins.split(",") if o.strip()]
+    if _env_origins
+    else _default_origins
+)
+# Also allow any *.vercel.app preview deployment via regex
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=_allowed_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

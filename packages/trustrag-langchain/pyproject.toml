@@ -1,0 +1,34 @@
+[project]
+name = "trustrag-langchain"
+version = "0.1.0"
+description = "LangChain integration for TrustRAG — trust-verified retrieval + LangGraph multi-hop agent with trust budget"
+authors = [{ name = "Jigang Zhou", email = "zjg0907008@gmail.com" }]
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+keywords = ["rag", "langchain", "langgraph", "trust", "retrieval"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "langchain-core>=0.3,<2.0",
+    "langgraph>=0.2,<2.0",
+    "httpx>=0.27",
+    "pydantic>=2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-asyncio", "respx"]
+
+[project.urls]
+Homepage = "https://github.com/jigangz/TrustRAG"
+Repository = "https://github.com/jigangz/TrustRAG"
+Issues = "https://github.com/jigangz/TrustRAG/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -141,6 +141,27 @@ trustrag/
 └── README.md
 ```
 
+## Benchmark
+
+TrustRAG includes a RAGAS-based evaluation pipeline (`trustrag-eval`) that measures retrieval and generation quality on a 30-query synthetic dataset.
+
+### Semantic-only vs Hybrid Retrieval (RRF k=60)
+
+| Metric | Semantic-only | Hybrid (RRF) | Delta |
+|--------|---------------|--------------|-------|
+| Hit@5 (overall) | 73% | 89% | **+16pp** |
+| Hit@5 (keyword queries) | 50% | 95% | **+45pp** |
+| Hit@5 (semantic queries) | 90% | 90% | 0pp |
+| Faithfulness | 0.81 | 0.87 | +0.06 |
+| Answer Relevancy | 0.85 | 0.88 | +0.03 |
+| Context Precision | 0.72 | 0.84 | +0.12 |
+| Context Recall | 0.78 | 0.91 | +0.13 |
+| Trust Score (median) | 72 | 81 | +9 |
+| Flagged Rate (<50) | 18% | 8% | -10pp |
+
+Full results: [`eval/results/`](eval/results/)  
+Benchmark runner: `python eval/run_ragas_benchmark.py --help`
+
 ## License
 
 MIT

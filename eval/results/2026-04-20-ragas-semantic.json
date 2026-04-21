@@ -1,0 +1,23 @@
+{
+  "ragas_summary": {
+    "faithfulness": 0.81,
+    "answer_relevancy": 0.85,
+    "context_precision": 0.72,
+    "context_recall": 0.78
+  },
+  "trust_distribution": {
+    "p25": 58.0,
+    "p50": 72.0,
+    "p75": 84.0,
+    "mean": 69.5,
+    "flagged_pct": 0.18
+  },
+  "hit_at_5_by_category": {
+    "semantic": 0.90,
+    "keyword": 0.50,
+    "hybrid": 0.80,
+    "overall": 0.73
+  },
+  "hit_at_5_overall": 0.73,
+  "total_queries": 30
+}

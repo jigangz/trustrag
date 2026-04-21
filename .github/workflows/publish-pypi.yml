@@ -1,0 +1,46 @@
+name: Publish PyPI Package
+
+on:
+  push:
+    tags:
+      - "pkg-langchain-v*"
+      - "pkg-mcp-v*"
+      - "pkg-eval-v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Parse tag
+        id: parse
+        run: |
+          TAG="${GITHUB_REF#refs/tags/pkg-}"
+          NAME="${TAG%-v*}"
+          VER="${TAG#*-v}"
+          echo "pkg_dir=trustrag-$NAME" >> $GITHUB_OUTPUT
+          echo "version=$VER" >> $GITHUB_OUTPUT
+      - name: Verify pyproject version matches tag
+        run: |
+          cd packages/${{ steps.parse.outputs.pkg_dir }}
+          EXPECTED="${{ steps.parse.outputs.version }}"
+          ACTUAL=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "::error::Version mismatch: pyproject.toml has $ACTUAL but tag says $EXPECTED"
+            exit 1
+          fi
+      - name: Build
+        run: |
+          cd packages/${{ steps.parse.outputs.pkg_dir }}
+          pip install build
+          python -m build
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/${{ steps.parse.outputs.pkg_dir }}/dist/

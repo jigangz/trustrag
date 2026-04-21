@@ -1,0 +1,191 @@
+{
+  "name": "TrustRAG Daily Low-Confidence Digest",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "id": "cron-daily",
+      "name": "Daily 7AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300],
+      "notes": "Fires daily at 7:00 AM. Adjust timezone in n8n settings."
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.TRUSTRAG_BACKEND_URL }}/api/audit?max_trust=60&since_hours=24",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "http-audit",
+      "name": "Fetch Low-Trust Entries",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-has-entries",
+              "leftValue": "={{ $json.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-entries",
+      "name": "Any Entries?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [710, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const entries = $input.all().map(item => item.json);\n\nconst table = entries.map(e => ({\n  trust: e.trust_score,\n  question: (e.question || '').slice(0, 80),\n  answer: (e.answer || '').slice(0, 120),\n  time: new Date(e.created_at).toLocaleString(),\n  audit_id: e.id\n}));\n\nconst markdown = `## TrustRAG Daily Low-Confidence Digest\n\n${entries.length} queries with trust < 60 in the last 24 hours.\n\n| Time | Trust | Question | Answer Preview |\n|------|-------|----------|----------------|\n${table.map(r => `| ${r.time} | ${r.trust} | ${r.question} | ${r.answer} |`).join('\\n')}\n\n**Action items:**\n- Review each; either improve doc coverage or add answer clarifications\n- Consider whether these questions indicate a knowledge gap`;\n\nreturn [{json: {markdown, count: entries.length}}];"
+      },
+      "id": "code-format",
+      "name": "Format Markdown Table",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [940, 200]
+    },
+    {
+      "parameters": {
+        "channel": "#daily-digest",
+        "text": "={{ $json.markdown }}",
+        "otherOptions": {}
+      },
+      "id": "slack-digest",
+      "name": "Post Digest to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1180, 140],
+      "credentials": {
+        "slackApi": {
+          "id": "REPLACE_ME",
+          "name": "Slack Bot Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.SMTP_FROM || 'trustrag@example.com' }}",
+        "toEmail": "={{ $env.ADMIN_EMAIL || 'admin@example.com' }}",
+        "subject": "=[TrustRAG] Daily Low-Confidence Digest — {{ $json.count }} queries",
+        "emailType": "text",
+        "message": "={{ $json.markdown }}"
+      },
+      "id": "email-digest",
+      "name": "Email Digest",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1180, 320],
+      "credentials": {
+        "smtp": {
+          "id": "REPLACE_ME",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "noop-empty",
+      "name": "No Entries Today",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [940, 420],
+      "notes": "Nothing to report — skip digest."
+    }
+  ],
+  "connections": {
+    "Daily 7AM Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch Low-Trust Entries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Low-Trust Entries": {
+      "main": [
+        [
+          {
+            "node": "Any Entries?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Any Entries?": {
+      "main": [
+        [
+          {
+            "node": "Format Markdown Table",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Entries Today",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Markdown Table": {
+      "main": [
+        [
+          {
+            "node": "Post Digest to Slack",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "TrustRAG",
+      "id": "tag-trustrag"
+    }
+  ],
+  "triggerCount": 1,
+  "pinData": {}
+}

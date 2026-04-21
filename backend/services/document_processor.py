@@ -70,7 +70,6 @@ def chunk_text(pages: list[dict], chunk_size: int = 500, overlap: int = 50) -> l
     while i < len(sentences):
         chunk_sentences = []
         chunk_tokens = 0
-        start_i = i
 
         # Build a chunk up to chunk_size tokens
         while i < len(sentences) and chunk_tokens < chunk_size:

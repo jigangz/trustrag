@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Shield, FileText, Search, ClipboardList, Menu, X } from "lucide-react";
 import DocumentList from "./DocumentList";
 import DocumentUpload from "./DocumentUpload";
-import QueryPanel from "./QueryPanel";
+import StreamingQueryPanel from "./StreamingQueryPanel";
 import AuditTimeline from "./AuditTimeline";
 
 const NAV = [
@@ -85,7 +85,7 @@ export default function Layout() {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
-          {view === "query" ? <QueryPanel /> : <AuditTimeline />}
+          {view === "query" ? <StreamingQueryPanel /> : <AuditTimeline />}
         </div>
       </main>
     </div>

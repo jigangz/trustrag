@@ -33,8 +33,29 @@ function getConfig(score) {
   };
 }
 
-export default function ConfidenceBadge({ score = 0, breakdown }) {
+export default function ConfidenceBadge({ score = 0, breakdown, verifying = false }) {
   const [expanded, setExpanded] = useState(false);
+
+  if (verifying) {
+    return (
+      <div className="rounded-xl border border-slate-700 bg-slate-900/60 p-4 animate-fade-in">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-slate-800">
+            <ShieldCheck className="w-7 h-7 text-slate-500 animate-pulse" />
+          </div>
+          <div>
+            <span className="text-lg font-semibold text-slate-400">--</span>
+            <span className="text-sm text-slate-600 ml-1">/100</span>
+            <p className="text-xs font-medium text-slate-500">Verifying trust...</p>
+          </div>
+        </div>
+        <div className="mt-3 h-2 bg-slate-800 rounded-full overflow-hidden">
+          <div className="h-full bg-slate-600 rounded-full animate-pulse w-1/3" />
+        </div>
+      </div>
+    );
+  }
+
   const cfg = getConfig(score);
   const { bg, border, bar, text, label, Icon } = cfg;
 

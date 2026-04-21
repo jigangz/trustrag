@@ -194,7 +194,7 @@ async def _fetch_chunks_by_ids(
                 0.0 AS similarity
             FROM chunks c
             JOIN documents d ON c.document_id = d.id
-            WHERE c.id = ANY(:ids::uuid[])
+            WHERE c.id = ANY(CAST(:ids AS uuid[]))
         """),
         {"ids": chunk_ids},
     )

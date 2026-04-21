@@ -10,7 +10,7 @@ from sqlalchemy import text
 from database import get_session, async_session
 from models import QueryRequest, QueryResponse, SourceResponse, ConfidenceResponse
 from services.embedding import embed_text
-from services.vector_store import search_similar
+from services.vector_store import search_similar, hybrid_search
 from services.rag_engine import generate_answer
 from services.trust_verifier import compute_trust_score
 from services.consistency_checker import check_consistency
@@ -53,8 +53,11 @@ async def ask_question(
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Embedding API error: {e}")
 
-    # 2. Retrieve top-k chunks
-    sources = await search_similar(session, query_embedding, top_k=5)
+    # 2. Retrieve top-k chunks via hybrid search (pgvector + tsvector + RRF)
+    # Falls back to pure semantic if HYBRID_ENABLED=false (see vector_store.hybrid_search)
+    sources = await hybrid_search(
+        session, query_embedding, request.question, top_k=5
+    )
     if not sources:
         raise HTTPException(
             status_code=404,

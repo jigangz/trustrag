@@ -119,8 +119,21 @@ async def hybrid_search(
     if not top_ids:
         return []
 
-    # Fetch full chunk data for top results
-    return await _fetch_chunks_by_ids(session, top_ids)
+    # Build lookup preferring semantic_results (has real cosine similarity).
+    # If chunk only appeared in keyword path, fall back to its ts_rank.
+    # Previous impl used _fetch_chunks_by_ids which zeroed out similarity —
+    # that made UI and benchmarks under-report the retrieval quality.
+    lookup = {c["chunk_id"]: c for c in keyword_results}
+    for c in semantic_results:
+        lookup[c["chunk_id"]] = c  # semantic wins (real cosine similarity)
+
+    # Any missing ids (rare) → fetch via _fetch_chunks_by_ids
+    missing = [cid for cid in top_ids if cid not in lookup]
+    if missing:
+        for chunk in await _fetch_chunks_by_ids(session, missing):
+            lookup[chunk["chunk_id"]] = chunk
+
+    return [lookup[cid] for cid in top_ids if cid in lookup]
 
 
 async def _keyword_search(

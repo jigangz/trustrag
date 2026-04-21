@@ -14,7 +14,6 @@ from typing import AsyncIterator
 
 from fastapi import WebSocket
 
-from config import settings
 from ws_messages import ErrorFrame
 
 logger = logging.getLogger(__name__)

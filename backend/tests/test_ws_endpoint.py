@@ -4,8 +4,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from routers.ws import router, manager
-from services.ws_connection import ConnectionManager
+from routers.ws import router
 
 
 @pytest.fixture

@@ -1,8 +1,6 @@
 """Tests for QueryTask async state machine (P1-2) and Groq streaming (P1-3)."""
 
-import asyncio
-import json
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
 

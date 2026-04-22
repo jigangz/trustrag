@@ -21,6 +21,9 @@ dist/
 uploads/
 
 # Ralph Loop (local-only automation; per Harry 2026-04-20)
-plans/
+/plans/
 scripts/ralph/
 .claude/
+
+# But do track superpowers specs + implementation plans
+!docs/superpowers/plans/

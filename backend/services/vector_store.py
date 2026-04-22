@@ -103,10 +103,17 @@ async def hybrid_search(
     if not settings.hybrid_enabled:
         return await search_similar(session, query_embedding, top_k=top_k)
 
-    # Run semantic and keyword search in parallel
-    semantic_results, keyword_results = await asyncio.gather(
-        search_similar(session, query_embedding, top_k=settings.semantic_candidates),
-        _keyword_search(session, query_text, limit=settings.keyword_candidates),
+    # Sequential — SQLAlchemy AsyncSession is NOT coroutine-safe.
+    # asyncio.gather on the same session causes:
+    #   IllegalStateChangeError: Method 'close()' can't be called here;
+    #   method '_connection_for_bind()' is already in progress
+    # Both queries are fast (~20ms each), so sequential is fine.
+    # For true parallelism, use two sessions via async_session().
+    semantic_results = await search_similar(
+        session, query_embedding, top_k=settings.semantic_candidates
+    )
+    keyword_results = await _keyword_search(
+        session, query_text, limit=settings.keyword_candidates
     )
 
     # Fuse rankings via RRF

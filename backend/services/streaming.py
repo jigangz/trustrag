@@ -35,6 +35,7 @@ class QueryTask:
         self.top_k = top_k
         self.cancelled = asyncio.Event()
         self.partial_answer = ""
+        self._query_embedding: list[float] | None = None  # Cached by _retrieve
 
     async def run(self, ws: WebSocket):
         """Execute the full query pipeline, emitting frames at each stage."""
@@ -90,15 +91,18 @@ class QueryTask:
             await self._emit_error(ws, code="INTERNAL", message=str(e))
 
     async def _retrieve(self) -> list[dict]:
-        """Retrieve relevant chunks via hybrid search (semantic + keyword)."""
+        """Retrieve relevant chunks via hybrid search (semantic + keyword).
+
+        Caches query_embedding on self for reuse in _verify_trust.
+        """
         from database import async_session
         from services.embedding import embed_text
         from services.vector_store import hybrid_search
 
         async with async_session() as session:
-            query_embedding = await embed_text(self.text)
+            self._query_embedding = await embed_text(self.text)
             chunks = await hybrid_search(
-                session, query_embedding, self.text, top_k=self.top_k
+                session, self._query_embedding, self.text, top_k=self.top_k
             )
         return chunks
 
@@ -115,12 +119,14 @@ class QueryTask:
             raise _GroqRateLimitError(retry_after_ms=retry_after) from e
 
     async def _verify_trust(self, answer: str, sources: list[dict]) -> dict:
-        """Run trust verification and return score + breakdown."""
-        from services.embedding import embed_text
+        """Run trust verification and return score + breakdown.
+
+        Reuses self._query_embedding cached by _retrieve (no re-embedding).
+        """
         from services.trust_verifier import compute_trust_score
 
-        query_embedding = await embed_text(self.text)
-        trust = await compute_trust_score(answer, sources, query_embedding)
+        assert self._query_embedding is not None, "_retrieve must run before _verify_trust"
+        trust = await compute_trust_score(answer, sources, self._query_embedding)
         return {
             "score": trust.score,
             "level": trust.level,

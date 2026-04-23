@@ -88,12 +88,31 @@ async def _check_hallucination(answer: str, sources: list[dict]) -> list[dict]:
 
 
 async def _compute_source_agreement(sources: list[dict]) -> float:
-    """Check if sources agree by computing pairwise embedding similarity."""
+    """Check if sources agree by computing pairwise embedding similarity.
+
+    Uses DB-stored embeddings from hybrid_search results when available,
+    falls back to re-embedding only if embeddings are missing.
+    """
     if len(sources) < 2:
         return 1.0  # Single source trivially agrees with itself
 
-    texts = [s["content"] for s in sources[:5]]
-    embeddings = await embed_batch(texts)
+    # Prefer pre-computed embeddings from DB (via hybrid_search)
+    embeddings = []
+    missing = []
+    for s in sources[:5]:
+        emb = s.get("embedding")
+        if emb and len(emb) > 0:
+            embeddings.append(emb)
+        else:
+            missing.append(s["content"])
+
+    # Fallback: embed any missing ones
+    if missing:
+        fallback = await embed_batch(missing)
+        embeddings.extend(fallback)
+
+    if len(embeddings) < 2:
+        return 1.0
 
     # Average pairwise cosine similarity
     similarities = []

@@ -35,6 +35,21 @@ async def store_chunks(session: AsyncSession, document_id: str, chunks: list[dic
     await session.commit()
 
 
+def _parse_vector(raw) -> list[float]:
+    """pgvector returns a string like '[0.1, 0.2, ...]'; parse to list[float].
+
+    If raw is already a list (driver auto-parses), return as-is.
+    """
+    if raw is None:
+        return []
+    if isinstance(raw, list):
+        return [float(x) for x in raw]
+    if isinstance(raw, str):
+        stripped = raw.strip().lstrip("[").rstrip("]")
+        return [float(x) for x in stripped.split(",") if x.strip()]
+    return list(raw)
+
+
 async def search_similar(
     session: AsyncSession,
     query_embedding: list[float],
@@ -44,7 +59,7 @@ async def search_similar(
     Find the most similar chunks to a query embedding using cosine distance.
 
     Returns:
-        List of {chunk_id, document_id, filename, content, page_number, similarity}
+        List of {chunk_id, document_id, filename, content, page_number, embedding, similarity}
         sorted by similarity descending.
     """
     result = await session.execute(
@@ -55,6 +70,7 @@ async def search_similar(
                 d.filename,
                 c.content,
                 c.page_number,
+                c.embedding,
                 1 - (c.embedding <=> :embedding) AS similarity
             FROM chunks c
             JOIN documents d ON c.document_id = d.id
@@ -71,6 +87,7 @@ async def search_similar(
             "filename": row["filename"],
             "content": row["content"],
             "page_number": row["page_number"],
+            "embedding": _parse_vector(row["embedding"]),
             "similarity": float(row["similarity"]),
         }
         for row in rows
@@ -163,6 +180,7 @@ async def _keyword_search(
                 d.filename,
                 c.content,
                 c.page_number,
+                c.embedding,
                 ts_rank(c.content_tsv, plainto_tsquery('english', :query)) AS similarity
             FROM chunks c
             JOIN documents d ON c.document_id = d.id
@@ -180,6 +198,7 @@ async def _keyword_search(
             "filename": row["filename"],
             "content": row["content"],
             "page_number": row["page_number"],
+            "embedding": _parse_vector(row["embedding"]),
             "similarity": float(row["similarity"]),
         }
         for row in rows
@@ -211,6 +230,7 @@ async def _fetch_chunks_by_ids(
                 d.filename,
                 c.content,
                 c.page_number,
+                c.embedding,
                 0.0 AS similarity
             FROM chunks c
             JOIN documents d ON c.document_id = d.id
@@ -228,6 +248,7 @@ async def _fetch_chunks_by_ids(
             "filename": row["filename"],
             "content": row["content"],
             "page_number": row["page_number"],
+            "embedding": _parse_vector(row["embedding"]),
             "similarity": float(row["similarity"]),
         }
         for row in rows

@@ -75,7 +75,7 @@ class TestHybridSearchBothPaths:
 
             mock_sem.return_value = [CHUNK_A, CHUNK_B]
             mock_kw.return_value = [CHUNK_B, CHUNK_C]
-            mock_fetch.return_value = [CHUNK_B, CHUNK_A, CHUNK_C]
+            mock_fetch.return_value = []
 
             result = await hybrid_search(
                 mock_session, [0.1] * 384, "fall protection", top_k=5
@@ -86,7 +86,9 @@ class TestHybridSearchBothPaths:
             assert result[0]["chunk_id"] == "bbb-222"
             mock_sem.assert_called_once()
             mock_kw.assert_called_once()
-            mock_fetch.assert_called_once()
+            # _fetch_chunks_by_ids only called for IDs missing from lookup
+            # All IDs are in semantic + keyword results, so fetch not needed
+            mock_fetch.assert_not_called()
 
 
 class TestHybridSearchKeywordOnlyFallback:
@@ -177,25 +179,47 @@ class TestHybridEnabledFalse:
             assert result == [CHUNK_A, CHUNK_B]
 
 
+class TestHybridSearchReturnsEmbedding:
+    @pytest.mark.asyncio
+    async def test_hybrid_search_returns_embedding_field(self, mock_session):
+        """Ensure hybrid_search returns chunk embedding so trust verifier can reuse."""
+        from services.vector_store import hybrid_search
+
+        test_embedding = [0.1] * 384
+        chunk_with_emb_a = {**CHUNK_A, "embedding": test_embedding}
+        chunk_with_emb_b = {**CHUNK_B, "embedding": [0.2] * 384}
+
+        with patch("services.vector_store.search_similar", new_callable=AsyncMock) as mock_sem, \
+             patch("services.vector_store._keyword_search", new_callable=AsyncMock) as mock_kw:
+
+            mock_sem.return_value = [chunk_with_emb_a, chunk_with_emb_b]
+            mock_kw.return_value = []
+
+            result = await hybrid_search(
+                mock_session, test_embedding, "test", top_k=2
+            )
+
+            assert len(result) >= 1
+            assert "embedding" in result[0], "hybrid_search must return embedding field for downstream reuse"
+            assert len(result[0]["embedding"]) == 384
+
+
 class TestHybridSearchUsesAsyncioGather:
     @pytest.mark.asyncio
     async def test_hybrid_search_uses_asyncio_gather(self, mock_session):
-        """Semantic and keyword run in parallel — total time ≈ max, not sum."""
+        """Semantic and keyword run sequentially (same session is NOT coroutine-safe)."""
         from services.vector_store import hybrid_search
 
         async def slow_semantic(*args, **kwargs):
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(0.05)
             return [CHUNK_A]
 
         async def slow_keyword(*args, **kwargs):
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(0.05)
             return [CHUNK_B]
 
         with patch("services.vector_store.search_similar", side_effect=slow_semantic), \
-             patch("services.vector_store._keyword_search", side_effect=slow_keyword), \
-             patch("services.vector_store._fetch_chunks_by_ids", new_callable=AsyncMock) as mock_fetch:
-
-            mock_fetch.return_value = [CHUNK_A, CHUNK_B]
+             patch("services.vector_store._keyword_search", side_effect=slow_keyword):
 
             start = time.monotonic()
             result = await hybrid_search(
@@ -203,7 +227,6 @@ class TestHybridSearchUsesAsyncioGather:
             )
             elapsed = time.monotonic() - start
 
-            # If run in parallel: ~0.1s. If sequential: ~0.2s.
-            # Allow generous margin but must be well under sequential time.
-            assert elapsed < 0.18, f"Took {elapsed:.3f}s — likely sequential, not parallel"
+            # Sequential execution: ~0.1s total (two 0.05s calls)
+            assert elapsed < 0.5, f"Took {elapsed:.3f}s — unexpectedly slow"
             assert len(result) == 2

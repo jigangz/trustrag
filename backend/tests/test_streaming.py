@@ -32,7 +32,7 @@ async def test_verify_trust_reuses_query_embedding_from_retrieve():
     mock_trust.hallucination_flags = []
 
     with patch("services.trust_verifier.compute_trust_score", new=AsyncMock(return_value=mock_trust)) as mock_trust_fn:
-        result = await task._verify_trust("test answer", [{"content": "src"}])
+        await task._verify_trust("test answer", [{"content": "src"}])
 
     mock_trust_fn.assert_called_once()
     # Verify the embedding passed in was the cached one, not a fresh embed call

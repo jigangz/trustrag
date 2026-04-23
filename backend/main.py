@@ -56,8 +56,10 @@ app.include_router(audit.router, prefix="/api/audit", tags=["audit"])
 app.include_router(ws.router)
 
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 async def health():
+    """Health probe. GET returns JSON status; HEAD returns 200 with empty body.
+    UptimeRobot free tier only supports HEAD — GET would require paid plan."""
     return {"status": "ok", "service": "trustrag"}
 
 

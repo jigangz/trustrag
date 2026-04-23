@@ -1,7 +1,5 @@
 """pgvector + tsvector operations for hybrid document retrieval."""
 
-import asyncio
-
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 

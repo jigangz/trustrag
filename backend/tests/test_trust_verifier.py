@@ -48,3 +48,26 @@ async def test_source_agreement_falls_back_to_embed_batch_when_no_embeddings():
 
     assert 0.0 <= result <= 1.0
     mock_embed.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_compute_trust_score_uses_precomputed_flags():
+    """When precomputed_hallucination_flags is provided, _check_hallucination is skipped."""
+    from services.trust_verifier import compute_trust_score
+
+    sources = [
+        {"filename": "a.pdf", "document_id": "d1", "similarity": 0.9, "embedding": [0.1] * 384, "content": "chunk a"},
+        {"filename": "b.pdf", "document_id": "d2", "similarity": 0.8, "embedding": [0.2] * 384, "content": "chunk b"},
+    ]
+
+    with patch("services.trust_verifier._check_hallucination", new=AsyncMock(return_value=[])) as mock_check:
+        result = await compute_trust_score(
+            "test answer",
+            sources,
+            query_embedding=[0.1] * 384,
+            precomputed_hallucination_flags=[{"sentence": "s", "reason": "r"}],
+        )
+
+    mock_check.assert_not_called(), "Should skip hallucination check when flags precomputed"
+    assert len(result.hallucination_flags) == 1
+    assert result.hallucination_free is False

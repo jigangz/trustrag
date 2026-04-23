@@ -131,6 +131,7 @@ async def compute_trust_score(
     answer: str,
     sources: list[dict],
     query_embedding: list[float],
+    precomputed_hallucination_flags: list[dict] | None = None,
 ) -> TrustScore:
     """
     Run the full trust verification pipeline on an answer.
@@ -165,8 +166,11 @@ async def compute_trust_score(
     agreement = await _compute_source_agreement(sources)
     agreement_score = agreement * 20.0
 
-    # 4. Hallucination check (20%): secondary LLM verification
-    hallucination_flags = await _check_hallucination(answer, sources)
+    # 4. Hallucination check (20%): use precomputed flags or run LLM check
+    if precomputed_hallucination_flags is not None:
+        hallucination_flags = precomputed_hallucination_flags
+    else:
+        hallucination_flags = await _check_hallucination(answer, sources)
     hallucination_free = len(hallucination_flags) == 0
     hallucination_score = 20.0 if hallucination_free else max(0, 20.0 - len(hallucination_flags) * 5)
 

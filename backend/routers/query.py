@@ -11,7 +11,8 @@ from database import get_session, async_session
 from models import QueryRequest, QueryResponse, SourceResponse, ConfidenceResponse
 from services.embedding import embed_text
 from services.vector_store import search_similar, hybrid_search
-from services.rag_engine import generate_answer
+from services.rag_engine import generate_answer, generate_answer_merged
+from config import settings
 from services.trust_verifier import compute_trust_score
 from services.consistency_checker import check_consistency
 from services import cache
@@ -72,16 +73,24 @@ async def ask_question(
             detail="No documents found. Please upload documents first.",
         )
 
-    # 3. Generate answer
+    # 3. Generate answer — merged path if flag set
     try:
-        rag_result = await generate_answer(request.question, sources)
+        if settings.merge_prompt_enabled:
+            rag_result = await generate_answer_merged(request.question, sources)
+            precomputed_flags = rag_result["hallucination_flags"]
+        else:
+            rag_result = await generate_answer(request.question, sources)
+            precomputed_flags = None
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"LLM generation error: {e}")
 
     answer = rag_result["answer"]
 
-    # 4. Trust verification
-    trust_score = await compute_trust_score(answer, sources, query_embedding)
+    # 4. Trust verification (skips hallucination check if flags precomputed)
+    trust_score = await compute_trust_score(
+        answer, sources, query_embedding,
+        precomputed_hallucination_flags=precomputed_flags,
+    )
 
     # 5. Optional consistency check
     consistency_result = None

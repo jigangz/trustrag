@@ -7,6 +7,8 @@ Orchestrates the full pipeline:
 4. Generate answer with source attribution
 """
 
+import json
+import logging
 import re
 from typing import AsyncIterator
 
@@ -117,3 +119,82 @@ async def generate_answer_stream(
     async for chunk in response:
         if chunk.choices and chunk.choices[0].delta.content:
             yield chunk.choices[0].delta.content
+
+
+logger = logging.getLogger(__name__)
+
+MERGED_SYSTEM_PROMPT = """You are a precise document assistant for construction safety.
+Answer the question using ONLY the provided source documents, then perform a self-check
+to identify any claims in your answer that are NOT directly supported by the sources.
+
+Rules:
+- Cite sources inline as [Source: document_name, p.XX]
+- If sources lack sufficient information, say so explicitly
+- Never fabricate page numbers or document names
+- In self_check.unsupported_claims, list any sentence in your answer that cannot be
+  fully verified from the sources provided
+
+Return ONLY valid JSON matching this schema (no prose outside JSON):
+{
+  "answer": "the answer text with inline citations",
+  "self_check": {
+    "unsupported_claims": [
+      {"sentence": "exact sentence text from answer", "reason": "why it's not supported"}
+    ]
+  }
+}
+"""
+
+
+async def generate_answer_merged(question: str, context_chunks: list[dict]) -> dict:
+    """Single-call generation + self-check via JSON structured output.
+
+    Falls back to sequential generate_answer + _check_hallucination if JSON
+    parse fails.
+
+    Returns dict with keys: answer, sources_used, hallucination_flags,
+    raw_response, merged (True if JSON parse succeeded, False if fallback used).
+    """
+    context = _build_context(context_chunks)
+
+    try:
+        response = await client.chat.completions.create(
+            model=settings.llm_model,
+            messages=[
+                {"role": "system", "content": MERGED_SYSTEM_PROMPT},
+                {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"},
+            ],
+            temperature=0.2,
+            max_tokens=1500,
+            response_format={"type": "json_object"},
+        )
+        raw = response.choices[0].message.content
+        parsed = json.loads(raw)
+
+        answer = parsed["answer"]
+        unsupported = parsed.get("self_check", {}).get("unsupported_claims", [])
+        if not isinstance(unsupported, list):
+            unsupported = []
+
+        citations = _parse_citations(answer)
+        return {
+            "answer": answer,
+            "sources_used": citations,
+            "hallucination_flags": unsupported,
+            "raw_response": response.model_dump(),
+            "merged": True,
+        }
+    except (json.JSONDecodeError, KeyError, AttributeError) as e:
+        logger.warning("Merged prompt JSON parse failed (%s), falling back to 2-call path", e)
+        # Fallback: sequential generate + hallucination check
+        from services.trust_verifier import _check_hallucination
+
+        result = await generate_answer(question, context_chunks)
+        flags = await _check_hallucination(result["answer"], context_chunks)
+        return {
+            "answer": result["answer"],
+            "sources_used": result["sources_used"],
+            "hallucination_flags": flags,
+            "raw_response": result["raw_response"],
+            "merged": False,
+        }

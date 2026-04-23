@@ -26,6 +26,9 @@ class Settings(BaseSettings):
     query_cache_enabled: bool = False  # Feature flag for Postgres query cache
     query_cache_ttl_hours: int = 24
 
+    # Merged generation + self-check prompt (Fix 3, HTTP only)
+    merge_prompt_enabled: bool = False
+
     # Hybrid search
     hybrid_enabled: bool = True
     semantic_candidates: int = 20

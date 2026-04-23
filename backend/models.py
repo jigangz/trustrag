@@ -65,6 +65,8 @@ class QueryRequest(BaseModel):
     """Incoming question from a user."""
     question: str
     enable_consistency_check: bool = False
+    top_k: int | None = None
+    nocache: bool = False  # For benchmark runs
 
 
 class SourceResponse(BaseModel):

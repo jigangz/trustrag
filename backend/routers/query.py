@@ -14,6 +14,7 @@ from services.vector_store import search_similar, hybrid_search
 from services.rag_engine import generate_answer
 from services.trust_verifier import compute_trust_score
 from services.consistency_checker import check_consistency
+from services import cache
 
 router = APIRouter()
 
@@ -46,6 +47,13 @@ async def ask_question(
     """
     if not request.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty")
+
+    # Cache lookup (bypass via nocache flag)
+    top_k = request.top_k or 5
+    if not request.nocache:
+        cached = await cache.get(session, request.question, top_k)
+        if cached is not None:
+            return QueryResponse(**cached)
 
     # 1. Embed question
     try:
@@ -125,7 +133,7 @@ async def ask_question(
     await session.commit()
 
     # 7. Build response
-    return QueryResponse(
+    response = QueryResponse(
         answer=answer,
         confidence=ConfidenceResponse(
             score=trust_score.score,
@@ -148,6 +156,11 @@ async def ask_question(
         consistency_check=consistency_result,
         audit_id=audit_id,
     )
+
+    # 8. Cache the response for future hits
+    await cache.set(session, request.question, top_k, response.model_dump())
+
+    return response
 
 
 @router.post("/demo", response_model=QueryResponse)
@@ -196,3 +209,10 @@ async def demo_query():
         consistency_check=None,
         audit_id="demo-00000000-0000-0000-0000-000000000000",
     )
+
+
+@router.post("/admin/clear-cache")
+async def clear_cache(session: AsyncSession = Depends(get_session)):
+    """Admin endpoint to clear query cache. Used by benchmark runner and manual ops."""
+    deleted = await cache.clear_all(session)
+    return {"status": "cleared", "deleted": deleted}

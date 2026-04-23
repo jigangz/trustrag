@@ -29,6 +29,21 @@ async def init_db():
             "CREATE INDEX IF NOT EXISTS idx_chunks_tsv ON chunks USING GIN (content_tsv)"
         ))
 
+        # Query cache table (idempotent, safe on every startup)
+        await conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS query_cache (
+                question_hash TEXT PRIMARY KEY,
+                response_json JSONB NOT NULL,
+                hit_count INTEGER DEFAULT 0,
+                created_at TIMESTAMPTZ DEFAULT NOW(),
+                last_hit_at TIMESTAMPTZ
+            )
+        """))
+        await conn.execute(text("""
+            CREATE INDEX IF NOT EXISTS idx_query_cache_created
+            ON query_cache (created_at)
+        """))
+
 
 async def get_session() -> AsyncSession:
     """Dependency that yields a database session."""

@@ -12,6 +12,7 @@ from models import DocumentResponse
 from services.document_processor import parse_pdf, chunk_text
 from services.embedding import embed_batch
 from services.vector_store import store_chunks
+from services import cache
 
 router = APIRouter()
 
@@ -74,6 +75,9 @@ async def upload_document(
     await session.commit()
 
     await store_chunks(session, doc_id, chunks)
+
+    # Invalidate query cache — new docs mean stale cached answers (SIGN-111)
+    await cache.clear_all(session)
 
     return {
         "id": doc_id,

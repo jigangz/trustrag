@@ -22,6 +22,10 @@ class Settings(BaseSettings):
     # Retrieval
     top_k: int = 5
 
+    # Query cache
+    query_cache_enabled: bool = False  # Feature flag for Postgres query cache
+    query_cache_ttl_hours: int = 24
+
     # Hybrid search
     hybrid_enabled: bool = True
     semantic_candidates: int = 20

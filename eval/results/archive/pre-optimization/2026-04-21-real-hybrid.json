@@ -1,0 +1,321 @@
+{
+  "mode": "hybrid",
+  "date": "2026-04-21",
+  "total_queries": 30,
+  "valid_responses": 8,
+  "errors": 22,
+  "trust_distribution": {
+    "mean": 44.0,
+    "median": 45.75,
+    "min": 31.0,
+    "max": 53.0,
+    "flagged_pct": 0.625
+  },
+  "retrieval": {
+    "top_similarity_mean": 0,
+    "top_similarity_median": 0
+  },
+  "answer_quality": {
+    "substring_match_rate": 0.25,
+    "hallucination_pass_rate": 0.375
+  },
+  "by_category": {
+    "semantic": {
+      "count": 8,
+      "trust_mean": 44.0,
+      "trust_median": 45.75,
+      "top_similarity_mean": 0,
+      "substring_match_rate": 0.25
+    }
+  },
+  "per_query": [
+    {
+      "query_id": "Q001",
+      "category": "semantic",
+      "trust_score": 53.0,
+      "trust_level": "medium",
+      "top_similarity": 0.0,
+      "answer_length": 317,
+      "num_sources": 5,
+      "substring_match": false,
+      "expected_substring": "6 feet",
+      "hallucination_passed": true,
+      "audit_id": "444139b6-11fb-4a2f-b15e-03edd07b7cce",
+      "error": null
+    },
+    {
+      "query_id": "Q002",
+      "category": "semantic",
+      "trust_score": 40.5,
+      "trust_level": "low",
+      "top_similarity": 0.0,
+      "answer_length": 910,
+      "num_sources": 5,
+      "substring_match": false,
+      "expected_substring": "de-energize",
+      "hallucination_passed": false,
+      "audit_id": "9c39b68e-e045-4799-b0e7-53d16eeaf79d",
+      "error": null
+    },
+    {
+      "query_id": "Q003",
+      "category": "semantic",
+      "trust_score": 31.0,
+      "trust_level": "low",
+      "top_similarity": 0.0,
+      "answer_length": 1242,
+      "num_sources": 5,
+      "substring_match": true,
+      "expected_substring": "ppe",
+      "hallucination_passed": false,
+      "audit_id": "d4621464-a6de-433e-812c-f370193d7b4e",
+      "error": null
+    },
+    {
+      "query_id": "Q004",
+      "category": "semantic",
+      "trust_score": 45.1,
+      "trust_level": "low",
+      "top_similarity": 0.0,
+      "answer_length": 430,
+      "num_sources": 5,
+      "substring_match": false,
+      "expected_substring": "water",
+      "hallucination_passed": false,
+      "audit_id": "b98f614b-7e12-4dd0-9c3b-307d9d2121e1",
+      "error": null
+    },
+    {
+      "query_id": "Q005",
+      "category": "semantic",
+      "trust_score": 52.3,
+      "trust_level": "medium",
+      "top_similarity": 0.0,
+      "answer_length": 429,
+      "num_sources": 5,
+      "substring_match": false,
+      "expected_substring": "permit",
+      "hallucination_passed": true,
+      "audit_id": "5ca3991e-dd7d-4d80-a91c-85464becf137",
+      "error": null
+    },
+    {
+      "query_id": "Q006",
+      "category": "semantic",
+      "trust_score": 31.6,
+      "trust_level": "low",
+      "top_similarity": 0.0,
+      "answer_length": 391,
+      "num_sources": 5,
+      "substring_match": false,
+      "expected_substring": "labeled",
+      "hallucination_passed": false,
+      "audit_id": "ab845c70-4037-4211-a3f7-59be3007ad43",
+      "error": null
+    },
+    {
+      "query_id": "Q007",
+      "category": "semantic",
+      "trust_score": 46.4,
+      "trust_level": "low",
+      "top_similarity": 0.0,
+      "answer_length": 426,
+      "num_sources": 5,
+      "substring_match": false,
+      "expected_substring": "osha 300",
+      "hallucination_passed": false,
+      "audit_id": "a9b71c4e-756b-40b0-b0eb-f5d257c6bca1",
+      "error": null
+    },
+    {
+      "query_id": "Q008",
+      "category": "semantic",
+      "trust_score": 52.1,
+      "trust_level": "medium",
+      "top_similarity": 0.0,
+      "answer_length": 601,
+      "num_sources": 5,
+      "substring_match": true,
+      "expected_substring": "competent person",
+      "hallucination_passed": true,
+      "audit_id": "f75a8ad5-2f79-4745-80f9-87e81c0c8d81",
+      "error": null
+    },
+    {
+      "query_id": "Q009",
+      "category": "semantic",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q010",
+      "category": "semantic",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q011",
+      "category": "keyword",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q012",
+      "category": "keyword",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q013",
+      "category": "keyword",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q014",
+      "category": "keyword",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q015",
+      "category": "keyword",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q016",
+      "category": "keyword",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q017",
+      "category": "keyword",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q018",
+      "category": "keyword",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q019",
+      "category": "keyword",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q020",
+      "category": "keyword",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q021",
+      "category": "hybrid",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q022",
+      "category": "hybrid",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q023",
+      "category": "hybrid",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q024",
+      "category": "hybrid",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q025",
+      "category": "hybrid",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q026",
+      "category": "hybrid",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q027",
+      "category": "hybrid",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q028",
+      "category": "hybrid",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q029",
+      "category": "hybrid",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "query_id": "Q030",
+      "category": "hybrid",
+      "trust_score": null,
+      "top_similarity": 0.0,
+      "substring_match": false,
+      "error": "HTTPStatusError: Server error '502 Bad Gateway' for url 'http://localhost:8000/api/query/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    }
+  ]
+}

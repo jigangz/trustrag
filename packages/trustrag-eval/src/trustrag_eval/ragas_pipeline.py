@@ -1,9 +1,13 @@
 """RAGAS evaluation pipeline with Gemini-as-judge for TrustRAG benchmarks.
 
-v2-completion (2026-04-22): Gemini 2.0 Flash now drives RAGAS LLM judge
+v2-completion (2026-04-22): Gemini 2.5 Flash drives RAGAS LLM judge
 (faithfulness / answer_relevancy / context_precision / context_recall) and
 embeddings. Keeps Groq TPD free for pipeline generation per SIGN-104 /
 v2 completion design §5.
+
+Note: gemini-2.0-flash was removed from the free tier (limit:0 as of
+2026-04). gemini-2.5-flash is the current free-tier Flash model — ~1500
+req/day + generous TPD, more than enough for 15q × 4 metrics.
 
 Self-bias note: the TrustRAG backend's HTTP path uses merged in-prompt
 self-check (SIGN-112). RAGAS `faithfulness` is the independent bias-free
@@ -25,12 +29,17 @@ from typing import Any
 import httpx
 from datasets import Dataset
 from ragas import RunConfig, evaluate
-from ragas.metrics.collections import (
-    answer_relevancy,
-    context_precision,
-    context_recall,
-    faithfulness,
-)
+# NOTE: we use the legacy underscored modules intentionally. The newer
+# `ragas.metrics.collections.*` classes require a modern InstructorLLM
+# (via llm_factory) and are NOT accepted by `ragas.evaluate()` as of
+# ragas 0.4.3 (evaluate checks isinstance(m, Metric), but collections
+# use a different base class). Legacy imports are backward-compat +
+# accept LangchainLLMWrapper via the `llm=` / `embeddings=` kwargs to
+# evaluate(). Deprecation warnings are expected and tolerated.
+from ragas.metrics._answer_relevance import answer_relevancy
+from ragas.metrics._context_precision import context_precision
+from ragas.metrics._context_recall import context_recall
+from ragas.metrics._faithfulness import faithfulness
 
 from trustrag_eval.dataset import Query, load_synthetic_queries
 from trustrag_eval.trust_metrics import compute_trust_metrics
@@ -67,9 +76,12 @@ def _get_gemini_judge():
     except ImportError:
         from ragas.llms.base import LangchainLLMWrapper  # older ragas layout
 
+    # gemini-2.5-flash is the current free-tier-enabled Flash (as of 2026-04;
+    # gemini-2.0-flash was removed from free tier — returns RESOURCE_EXHAUSTED
+    # with limit:0 on free keys).
     return LangchainLLMWrapper(
         ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash-exp",
+            model="gemini-2.5-flash",
             google_api_key=api_key,
             temperature=0.0,
         )
@@ -94,7 +106,7 @@ def _get_gemini_embeddings():
 
     return LangchainEmbeddingsWrapper(
         GoogleGenerativeAIEmbeddings(
-            model="models/text-embedding-004",
+            model="models/gemini-embedding-001",
             google_api_key=api_key,
         )
     )
@@ -316,7 +328,7 @@ async def run_full_benchmark(
             "mode": mode,
             "endpoint": endpoint,
             "model": os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
-            "judge_model": "gemini-2.0-flash-exp" if use_gemini else "openai-default",
+            "judge_model": "gemini-2.5-flash" if use_gemini else "openai-default",
             "queries_count": len(rows),
             "elapsed_seconds": round(elapsed, 1),
         },

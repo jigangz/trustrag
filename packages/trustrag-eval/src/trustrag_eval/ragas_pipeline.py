@@ -76,12 +76,15 @@ def _get_gemini_judge():
     except ImportError:
         from ragas.llms.base import LangchainLLMWrapper  # older ragas layout
 
-    # gemini-2.5-flash is the current free-tier-enabled Flash (as of 2026-04;
-    # gemini-2.0-flash was removed from free tier — returns RESOURCE_EXHAUSTED
-    # with limit:0 on free keys).
+    # Using gemini-2.5-flash-lite on free tier: higher RPM than 2.5-flash
+    # (~30 RPM vs 10) which matters because RAGAS bursts 10-15 LLM calls per
+    # query × 15 queries. gemini-2.0-flash has limit:0 on free tier (Google
+    # removed it 2026-04), gemini-2.5-flash hits RPM wall quickly. Lite trades
+    # a bit of judge quality for reliable throughput — acceptable since RAGAS
+    # uses multi-vote / statement-level aggregation.
     return LangchainLLMWrapper(
         ChatGoogleGenerativeAI(
-            model="gemini-2.5-flash",
+            model="gemini-2.5-flash-lite",
             google_api_key=api_key,
             temperature=0.0,
         )
@@ -261,11 +264,14 @@ def run_ragas_evaluation(
         for r in valid_rows
     ])
 
-    # RunConfig handles retries + exponential backoff (SIGN-104)
+    # RunConfig handles retries + exponential backoff (SIGN-104).
+    # max_workers=1 forces strict serial RAGAS calls — critical on Gemini
+    # free tier where RPM~30 would otherwise trigger 429 storms when
+    # RAGAS fires multiple metric calls per query in parallel.
     run_config = RunConfig(
-        max_retries=5,
-        max_wait=60,
-        max_workers=2,  # Be gentle with Gemini free tier
+        max_retries=8,
+        max_wait=90,
+        max_workers=1,
     )
 
     eval_kwargs = dict(
@@ -328,7 +334,7 @@ async def run_full_benchmark(
             "mode": mode,
             "endpoint": endpoint,
             "model": os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
-            "judge_model": "gemini-2.5-flash" if use_gemini else "openai-default",
+            "judge_model": "gemini-2.5-flash-lite" if use_gemini else "openai-default",
             "queries_count": len(rows),
             "elapsed_seconds": round(elapsed, 1),
         },

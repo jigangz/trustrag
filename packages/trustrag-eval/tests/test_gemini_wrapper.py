@@ -40,11 +40,16 @@ def test_gemini_judge_missing_api_key_raises():
             os.environ["GOOGLE_API_KEY"] = saved
 
 
-def test_gemini_judge_actually_scores_one_sample():
-    """End-to-end: can Gemini judge compute RAGAS metrics on a trivial example?
+@pytest.mark.skipif(
+    not (os.getenv("GROQ_API_KEY") and os.getenv("GOOGLE_API_KEY")),
+    reason="Needs both GROQ_API_KEY (judge) and GOOGLE_API_KEY (embeddings)",
+)
+def test_groq_judge_scores_one_sample():
+    """End-to-end: Groq 8B judge + Gemini embeddings compute RAGAS on trivial example.
 
-    Goes through run_ragas_evaluation (the real entry point) so this covers
-    the legacy-underscored-metrics + LangchainLLMWrapper path we actually use.
+    Goes through run_ragas_evaluation (the real entry point). ~4s runtime.
+    Replaces the former Gemini-only end-to-end test which took 30s+ per metric
+    due to AFC internal retries (gemini-2.5-flash-lite still too slow for CI).
     """
     from trustrag_eval.ragas_pipeline import run_ragas_evaluation
 
@@ -59,10 +64,8 @@ def test_gemini_judge_actually_scores_one_sample():
         "retrieved_chunk_ids": [],
     }]
 
-    result = run_ragas_evaluation(rows, use_gemini=True)
-    # Obviously correct: faithfulness should be non-zero for a trivial match
-    # (Gemini may score anywhere in [0.3, 1.0] depending on its noncommittal rating)
+    result = run_ragas_evaluation(rows, judge_provider="groq")
+    # Obviously correct trivial example: faithfulness should be non-zero
     assert result["faithfulness"] >= 0.3, f"Expected faithfulness >= 0.3, got {result['faithfulness']}"
-    # And it should not be NaN
     import math
     assert not math.isnan(result["faithfulness"]), "faithfulness was NaN"

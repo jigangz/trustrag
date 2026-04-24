@@ -52,8 +52,52 @@ BATCH_PAUSE_SECONDS = 10
 
 
 # ---------------------------------------------------------------------------
-# Gemini judge + embeddings (v2-completion, replaces default OpenAI judge)
+# Judge + embeddings (v2-completion)
 # ---------------------------------------------------------------------------
+# Provider strategy:
+#   - Groq Llama 3.1 8B Instant is the DEFAULT judge: 500K TPD free tier,
+#     ~500 tok/s inference, perfect for RAGAS's binary (1/0) verdict prompts.
+#   - Gemini 2.5 Flash Lite is a fallback: free but AFC internal retries
+#     loop for 30-40s/call, making 60-job RAGAS run take 2+ hours.
+#   - Embeddings use Gemini (gemini-embedding-001): Groq has no embedding
+#     API, and Gemini embedding free tier is plenty for RAGAS's ~15 embed
+#     calls per benchmark.
+
+
+def _get_groq_judge():
+    """Build RAGAS-compatible LLM wrapper around Groq Llama 3.1 8B Instant.
+
+    Uses OpenAI-compatible endpoint + ChatOpenAI langchain wrapper.
+    Model: llama-3.1-8b-instant — 500K TPD free tier (5x the 70B quota),
+    500+ tok/s inference, good enough for RAGAS binary verdicts.
+
+    Raises RuntimeError if GROQ_API_KEY not set.
+    """
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        raise RuntimeError(
+            "GROQ_API_KEY not set. Get free at https://console.groq.com "
+            "(same key used for pipeline generation; reuse Railway value)"
+        )
+
+    from langchain_openai import ChatOpenAI
+
+    try:
+        from ragas.llms import LangchainLLMWrapper
+    except ImportError:
+        from ragas.llms.base import LangchainLLMWrapper
+
+    return LangchainLLMWrapper(
+        ChatOpenAI(
+            model="llama-3.1-8b-instant",
+            api_key=api_key,
+            base_url="https://api.groq.com/openai/v1",
+            temperature=0.0,
+            timeout=30,
+            max_retries=3,
+        )
+    )
+
 
 def _get_gemini_judge():
     """Build RAGAS-compatible LangchainLLMWrapper around Gemini 2.0 Flash.
@@ -238,12 +282,20 @@ def compute_hit_at_5(rows: list[dict]) -> dict[str, float]:
 def run_ragas_evaluation(
     rows: list[dict],
     batch_size: int = 5,
-    use_gemini: bool = True,
+    judge_provider: str = "groq",
 ) -> dict[str, Any]:
     """Run RAGAS metrics on collected results.
 
-    use_gemini=True (default, v2): uses Gemini 2.0 Flash as judge + embeddings
-    use_gemini=False: uses RAGAS default judge (requires OPENAI_API_KEY)
+    judge_provider choices:
+      - "groq"   (default, v2-completion): Groq Llama 3.1 8B Instant
+                 (500K TPD, fast inference, binary verdicts are OK on 8B)
+      - "gemini": Gemini 2.5 Flash Lite (slow due to AFC internal retries,
+                  kept as fallback)
+      - "default": no judge override, RAGAS tries its default (OpenAI —
+                   needs OPENAI_API_KEY; avoid unless you have one)
+
+    Embeddings (for answer_relevancy) always use Gemini since Groq has
+    no embedding API.
     """
     # Filter out rows with empty answer (failed queries) — RAGAS would crash
     valid_rows = [r for r in rows if r["answer"]]
@@ -264,15 +316,12 @@ def run_ragas_evaluation(
         for r in valid_rows
     ])
 
-    # RunConfig handles retries + exponential backoff (SIGN-104).
-    # max_workers=1 forces strict serial RAGAS calls — critical on Gemini
-    # free tier where RPM~30 would otherwise trigger 429 storms when
-    # RAGAS fires multiple metric calls per query in parallel.
-    run_config = RunConfig(
-        max_retries=8,
-        max_wait=90,
-        max_workers=1,
-    )
+    # RunConfig: Groq handles parallel well (500+ tok/s), Gemini needs serial
+    # to survive free-tier RPM burst limits.
+    if judge_provider == "groq":
+        run_config = RunConfig(max_retries=5, max_wait=30, max_workers=4)
+    else:
+        run_config = RunConfig(max_retries=8, max_wait=90, max_workers=1)
 
     eval_kwargs = dict(
         dataset=ragas_ds,
@@ -280,9 +329,13 @@ def run_ragas_evaluation(
         run_config=run_config,
         batch_size=batch_size,
     )
-    if use_gemini:
+    if judge_provider == "groq":
+        eval_kwargs["llm"] = _get_groq_judge()
+        eval_kwargs["embeddings"] = _get_gemini_embeddings()
+    elif judge_provider == "gemini":
         eval_kwargs["llm"] = _get_gemini_judge()
         eval_kwargs["embeddings"] = _get_gemini_embeddings()
+    # else: judge_provider == "default" — let RAGAS use its OpenAI default
 
     result = evaluate(**eval_kwargs)
 
@@ -301,7 +354,7 @@ async def run_full_benchmark(
     dataset_path: str = "eval/synthetic_queries.json",
     limit: int | None = None,
     mode: str = "hybrid",
-    use_gemini: bool = True,
+    judge_provider: str = "groq",
 ) -> dict[str, Any]:
     """Run the complete benchmark: query backend, compute RAGAS + trust + hit@5.
 
@@ -311,14 +364,19 @@ async def run_full_benchmark(
         dataset_path: path to synthetic_queries.json
         limit: number of queries to run (None = all 30)
         mode: "semantic" or "hybrid" (informational; toggle Railway HYBRID_ENABLED separately)
-        use_gemini: True = Gemini judge; False = RAGAS default (needs OPENAI_API_KEY)
+        judge_provider: "groq" (default, fast) / "gemini" (slow fallback) / "default" (OpenAI)
     """
     start_ts = time.time()
     rows = await collect_results(endpoint, dataset_path, limit=limit)
 
-    # RAGAS metrics (synchronous internally; may take several minutes)
-    logger.info("Running RAGAS on %d rows (judge=%s)", len(rows), "gemini-2.0-flash" if use_gemini else "default")
-    ragas_results = run_ragas_evaluation(rows, use_gemini=use_gemini)
+    # RAGAS metrics (synchronous internally)
+    judge_label = {
+        "groq": "groq-llama-3.1-8b-instant",
+        "gemini": "gemini-2.5-flash-lite",
+        "default": "ragas-default-openai",
+    }.get(judge_provider, judge_provider)
+    logger.info("Running RAGAS on %d rows (judge=%s)", len(rows), judge_label)
+    ragas_results = run_ragas_evaluation(rows, judge_provider=judge_provider)
 
     # Trust distribution (deterministic, no LLM)
     trust_dist = compute_trust_metrics(rows)
@@ -334,7 +392,7 @@ async def run_full_benchmark(
             "mode": mode,
             "endpoint": endpoint,
             "model": os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
-            "judge_model": "gemini-2.5-flash-lite" if use_gemini else "openai-default",
+            "judge_model": judge_label,
             "queries_count": len(rows),
             "elapsed_seconds": round(elapsed, 1),
         },
@@ -363,7 +421,8 @@ def _main() -> int:
     ap.add_argument("--limit", type=int, default=None, help="Number of queries (default: all)")
     ap.add_argument("--mode", choices=["semantic", "hybrid"], required=True, help="Informational label (must match Railway HYBRID_ENABLED)")
     ap.add_argument("--output", required=True, help="Output JSON path")
-    ap.add_argument("--no-gemini", action="store_true", help="Disable Gemini judge (falls back to RAGAS default; requires OPENAI_API_KEY)")
+    ap.add_argument("--judge", choices=["groq", "gemini", "default"], default="groq",
+                    help="RAGAS judge provider: groq (default, Llama 8B fast), gemini (Flash Lite fallback, slow), default (OpenAI; needs OPENAI_API_KEY)")
     ap.add_argument("--verbose", "-v", action="store_true", help="DEBUG logging")
 
     args = ap.parse_args()
@@ -378,7 +437,7 @@ def _main() -> int:
         dataset_path=args.dataset,
         limit=args.limit,
         mode=args.mode,
-        use_gemini=not args.no_gemini,
+        judge_provider=args.judge,
     ))
 
     # Write output

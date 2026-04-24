@@ -1,7 +1,6 @@
 """Tests for dataset loading."""
 
 import json
-import tempfile
 from pathlib import Path
 
 from trustrag_eval.dataset import load_synthetic_queries

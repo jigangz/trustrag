@@ -1,7 +1,25 @@
-"""RAGAS evaluation pipeline with rate-limit handling for TrustRAG benchmarks."""
+"""RAGAS evaluation pipeline with Gemini-as-judge for TrustRAG benchmarks.
 
+v2-completion (2026-04-22): Gemini 2.0 Flash now drives RAGAS LLM judge
+(faithfulness / answer_relevancy / context_precision / context_recall) and
+embeddings. Keeps Groq TPD free for pipeline generation per SIGN-104 /
+v2 completion design §5.
+
+Self-bias note: the TrustRAG backend's HTTP path uses merged in-prompt
+self-check (SIGN-112). RAGAS `faithfulness` is the independent bias-free
+metric — both numbers are reported but not directly comparable.
+"""
+
+from __future__ import annotations
+
+import argparse
 import asyncio
+import json
+import logging
+import os
+import sys
 import time
+from datetime import datetime
 from typing import Any
 
 import httpx
@@ -18,9 +36,73 @@ from trustrag_eval.dataset import Query, load_synthetic_queries
 from trustrag_eval.trust_metrics import compute_trust_metrics
 
 
+logger = logging.getLogger(__name__)
+
 BATCH_SIZE = 5
 BATCH_PAUSE_SECONDS = 10
 
+
+# ---------------------------------------------------------------------------
+# Gemini judge + embeddings (v2-completion, replaces default OpenAI judge)
+# ---------------------------------------------------------------------------
+
+def _get_gemini_judge():
+    """Build RAGAS-compatible LangchainLLMWrapper around Gemini 2.0 Flash.
+
+    Raises RuntimeError if GOOGLE_API_KEY not set. Gemini free tier
+    (1M tokens/day, 1500 req/day) is plenty for 15q × 4 metrics benchmarks.
+    """
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        raise RuntimeError(
+            "GOOGLE_API_KEY not set. Get one free at "
+            "https://aistudio.google.com/app/apikey and `export GOOGLE_API_KEY=...`"
+        )
+
+    # Late imports so module can be loaded for code inspection without deps
+    from langchain_google_genai import ChatGoogleGenerativeAI
+
+    try:
+        from ragas.llms import LangchainLLMWrapper
+    except ImportError:
+        from ragas.llms.base import LangchainLLMWrapper  # older ragas layout
+
+    return LangchainLLMWrapper(
+        ChatGoogleGenerativeAI(
+            model="gemini-2.0-flash-exp",
+            google_api_key=api_key,
+            temperature=0.0,
+        )
+    )
+
+
+def _get_gemini_embeddings():
+    """Build RAGAS-compatible embeddings wrapper (text-embedding-004)."""
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        raise RuntimeError(
+            "GOOGLE_API_KEY not set. Get one free at "
+            "https://aistudio.google.com/app/apikey and `export GOOGLE_API_KEY=...`"
+        )
+
+    from langchain_google_genai import GoogleGenerativeAIEmbeddings
+
+    try:
+        from ragas.embeddings import LangchainEmbeddingsWrapper
+    except ImportError:
+        from ragas.embeddings.base import LangchainEmbeddingsWrapper  # older layout
+
+    return LangchainEmbeddingsWrapper(
+        GoogleGenerativeAIEmbeddings(
+            model="models/text-embedding-004",
+            google_api_key=api_key,
+        )
+    )
+
+
+# ---------------------------------------------------------------------------
+# Backend querying (cache-bypassing for benchmark fidelity per SIGN-111)
+# ---------------------------------------------------------------------------
 
 async def _query_endpoint(
     client: httpx.AsyncClient,
@@ -28,14 +110,23 @@ async def _query_endpoint(
     query: Query,
     max_retries: int = 5,
 ) -> dict:
-    """Query the TrustRAG backend with exponential backoff on 429."""
-    url = f"{endpoint}/api/query"
-    payload = {"question": query.text, "top_k": 5}
+    """Query the TrustRAG backend with exponential backoff on 429.
 
+    Adds nocache=True per SIGN-111 so benchmark measures real pipeline,
+    not cache hits. Uses trailing slash to match Railway FastAPI mount.
+    """
+    url = f"{endpoint.rstrip('/')}/api/query/"
+    payload = {"question": query.text, "top_k": 5, "nocache": True}
+
+    resp = None
     for attempt in range(max_retries):
         resp = await client.post(url, json=payload)
         if resp.status_code == 429:
             wait = min(2**attempt * 2, 60)
+            logger.warning(
+                "Groq 429 on query %s, retry attempt %d after %ds",
+                query.id, attempt + 1, wait,
+            )
             await asyncio.sleep(wait)
             continue
         resp.raise_for_status()
@@ -43,7 +134,7 @@ async def _query_endpoint(
 
     raise httpx.HTTPStatusError(
         f"Rate limited after {max_retries} retries",
-        request=resp.request,
+        request=resp.request if resp else None,
         response=resp,
     )
 
@@ -51,22 +142,42 @@ async def _query_endpoint(
 async def collect_results(
     endpoint: str = "http://localhost:8000",
     dataset_path: str = "eval/synthetic_queries.json",
+    limit: int | None = None,
 ) -> list[dict]:
-    """Query the backend for all synthetic queries, with batching and backoff."""
+    """Query the backend for N synthetic queries (or all), with batching."""
     queries = load_synthetic_queries(dataset_path)
+    if limit is not None:
+        queries = queries[:limit]
+
+    logger.info("Collecting results for %d queries from %s", len(queries), endpoint)
+
     rows: list[dict] = []
 
-    async with httpx.AsyncClient(timeout=60) as client:
+    async with httpx.AsyncClient(timeout=120) as client:
         for i in range(0, len(queries), BATCH_SIZE):
             batch = queries[i : i + BATCH_SIZE]
             for q in batch:
-                data = await _query_endpoint(client, endpoint, q)
+                try:
+                    data = await _query_endpoint(client, endpoint, q)
+                except Exception as e:
+                    logger.error("Failed query %s: %s", q.id, e)
+                    data = {"answer": "", "sources": [], "confidence": {"score": 0}}
+
+                # trust_score lives under `confidence.score` in v0.2+ backend,
+                # but fall back to top-level `trust_score` for compatibility with
+                # older mocks + potential schema drift.
+                trust_score = None
+                if isinstance(data.get("confidence"), dict):
+                    trust_score = data["confidence"].get("score")
+                if trust_score is None:
+                    trust_score = data.get("trust_score")
+
                 rows.append({
                     "question": q.text,
                     "answer": data.get("answer", ""),
-                    "contexts": [s["content"] for s in data.get("sources", [])],
+                    "contexts": [s.get("text", s.get("content", "")) for s in data.get("sources", [])],
                     "ground_truth": q.expected_answer_substring or "",
-                    "trust_score": data.get("trust_score"),
+                    "trust_score": trust_score,
                     "category": q.category,
                     "ground_truth_chunk_ids": q.ground_truth_chunk_ids,
                     "retrieved_chunk_ids": [
@@ -77,13 +188,14 @@ async def collect_results(
 
             # Pause between batches to respect Groq rate limits (SIGN-104)
             if i + BATCH_SIZE < len(queries):
+                logger.debug("Pausing %ds between batches", BATCH_PAUSE_SECONDS)
                 await asyncio.sleep(BATCH_PAUSE_SECONDS)
 
     return rows
 
 
 def compute_hit_at_5(rows: list[dict]) -> dict[str, float]:
-    """Compute Hit@5 overall and by category."""
+    """Compute Hit@5 overall and by category. Deterministic (no LLM)."""
     hit_by_cat: dict[str, float] = {}
     for cat in ["semantic", "keyword", "hybrid"]:
         cat_rows = [r for r in rows if r["category"] == cat]
@@ -104,26 +216,57 @@ def compute_hit_at_5(rows: list[dict]) -> dict[str, float]:
     return hit_by_cat
 
 
-def run_ragas_evaluation(rows: list[dict], batch_size: int = 5) -> dict[str, float]:
-    """Run RAGAS metrics on collected results with retry/backoff via RunConfig."""
+# ---------------------------------------------------------------------------
+# RAGAS evaluation driven by Gemini judge
+# ---------------------------------------------------------------------------
+
+def run_ragas_evaluation(
+    rows: list[dict],
+    batch_size: int = 5,
+    use_gemini: bool = True,
+) -> dict[str, Any]:
+    """Run RAGAS metrics on collected results.
+
+    use_gemini=True (default, v2): uses Gemini 2.0 Flash as judge + embeddings
+    use_gemini=False: uses RAGAS default judge (requires OPENAI_API_KEY)
+    """
+    # Filter out rows with empty answer (failed queries) — RAGAS would crash
+    valid_rows = [r for r in rows if r["answer"]]
+    if len(valid_rows) < len(rows):
+        logger.warning("Skipping %d rows with empty answer in RAGAS eval", len(rows) - len(valid_rows))
+
+    if not valid_rows:
+        return {
+            "faithfulness": 0.0,
+            "answer_relevancy": 0.0,
+            "context_precision": 0.0,
+            "context_recall": 0.0,
+            "per_query": [],
+        }
+
     ragas_ds = Dataset.from_list([
         {k: r[k] for k in ["question", "answer", "contexts", "ground_truth"]}
-        for r in rows
+        for r in valid_rows
     ])
 
-    # RunConfig handles retries + exponential backoff for LLM calls (SIGN-104)
+    # RunConfig handles retries + exponential backoff (SIGN-104)
     run_config = RunConfig(
-        max_retries=10,
+        max_retries=5,
         max_wait=60,
-        max_workers=4,  # Limit concurrency to avoid Groq rate limits
+        max_workers=2,  # Be gentle with Gemini free tier
     )
 
-    result = evaluate(
-        ragas_ds,
+    eval_kwargs = dict(
+        dataset=ragas_ds,
         metrics=[faithfulness, answer_relevancy, context_precision, context_recall],
         run_config=run_config,
         batch_size=batch_size,
     )
+    if use_gemini:
+        eval_kwargs["llm"] = _get_gemini_judge()
+        eval_kwargs["embeddings"] = _get_gemini_embeddings()
+
+    result = evaluate(**eval_kwargs)
 
     df = result.to_pandas()
     return {
@@ -138,20 +281,45 @@ def run_ragas_evaluation(rows: list[dict], batch_size: int = 5) -> dict[str, flo
 async def run_full_benchmark(
     endpoint: str = "http://localhost:8000",
     dataset_path: str = "eval/synthetic_queries.json",
+    limit: int | None = None,
+    mode: str = "hybrid",
+    use_gemini: bool = True,
 ) -> dict[str, Any]:
-    """Run the complete benchmark: query backend, compute RAGAS + trust + hit@5."""
-    rows = await collect_results(endpoint, dataset_path)
+    """Run the complete benchmark: query backend, compute RAGAS + trust + hit@5.
 
-    # RAGAS metrics (synchronous, uses internal async)
-    ragas_results = run_ragas_evaluation(rows)
+    Args:
+        endpoint: TrustRAG backend URL (should have HYBRID_ENABLED flipped to
+            match `mode` before calling — this function does not flip the flag)
+        dataset_path: path to synthetic_queries.json
+        limit: number of queries to run (None = all 30)
+        mode: "semantic" or "hybrid" (informational; toggle Railway HYBRID_ENABLED separately)
+        use_gemini: True = Gemini judge; False = RAGAS default (needs OPENAI_API_KEY)
+    """
+    start_ts = time.time()
+    rows = await collect_results(endpoint, dataset_path, limit=limit)
 
-    # Trust distribution
+    # RAGAS metrics (synchronous internally; may take several minutes)
+    logger.info("Running RAGAS on %d rows (judge=%s)", len(rows), "gemini-2.0-flash" if use_gemini else "default")
+    ragas_results = run_ragas_evaluation(rows, use_gemini=use_gemini)
+
+    # Trust distribution (deterministic, no LLM)
     trust_dist = compute_trust_metrics(rows)
 
-    # Hit@5
+    # Hit@5 (deterministic, no LLM)
     hit_at_5 = compute_hit_at_5(rows)
 
+    elapsed = time.time() - start_ts
+
     return {
+        "metadata": {
+            "date": datetime.utcnow().isoformat() + "Z",
+            "mode": mode,
+            "endpoint": endpoint,
+            "model": os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+            "judge_model": "gemini-2.0-flash-exp" if use_gemini else "openai-default",
+            "queries_count": len(rows),
+            "elapsed_seconds": round(elapsed, 1),
+        },
         "ragas_summary": {
             k: v for k, v in ragas_results.items() if k != "per_query"
         },
@@ -159,5 +327,60 @@ async def run_full_benchmark(
         "trust_distribution": dict(trust_dist),
         "hit_at_5_by_category": hit_at_5,
         "hit_at_5_overall": hit_at_5.get("overall", 0.0),
-        "total_queries": len(rows),
+        "per_query": rows,
     }
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+def _main() -> int:
+    ap = argparse.ArgumentParser(
+        prog="python -m trustrag_eval.ragas_pipeline",
+        description="Run RAGAS benchmark against TrustRAG endpoint (Gemini-judged).",
+    )
+    ap.add_argument("--endpoint", required=True, help="Backend URL, e.g., https://trustrag-production.up.railway.app")
+    ap.add_argument("--dataset", required=True, help="Path to synthetic_queries.json")
+    ap.add_argument("--limit", type=int, default=None, help="Number of queries (default: all)")
+    ap.add_argument("--mode", choices=["semantic", "hybrid"], required=True, help="Informational label (must match Railway HYBRID_ENABLED)")
+    ap.add_argument("--output", required=True, help="Output JSON path")
+    ap.add_argument("--no-gemini", action="store_true", help="Disable Gemini judge (falls back to RAGAS default; requires OPENAI_API_KEY)")
+    ap.add_argument("--verbose", "-v", action="store_true", help="DEBUG logging")
+
+    args = ap.parse_args()
+
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
+
+    result = asyncio.run(run_full_benchmark(
+        endpoint=args.endpoint,
+        dataset_path=args.dataset,
+        limit=args.limit,
+        mode=args.mode,
+        use_gemini=not args.no_gemini,
+    ))
+
+    # Write output
+    os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
+    with open(args.output, "w", encoding="utf-8") as f:
+        json.dump(result, f, indent=2, default=str)
+
+    # Print summary to stdout for easy piping
+    summary = {
+        "metadata": result["metadata"],
+        "ragas_summary": result["ragas_summary"],
+        "hit_at_5": {
+            "overall": result["hit_at_5_overall"],
+            **result["hit_at_5_by_category"],
+        },
+    }
+    print(json.dumps(summary, indent=2))
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(_main())

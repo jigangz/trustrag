@@ -3,12 +3,10 @@
 import json
 import pytest
 from unittest.mock import patch, AsyncMock, MagicMock
-from pathlib import Path
 
 from trustrag_eval.ragas_pipeline import (
     collect_results,
     compute_hit_at_5,
-    run_ragas_evaluation,
 )
 
 

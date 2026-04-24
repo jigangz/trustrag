@@ -254,7 +254,11 @@ async def collect_results(
 
 
 def compute_hit_at_5(rows: list[dict]) -> dict[str, float]:
-    """Compute Hit@5 overall and by category. Deterministic (no LLM)."""
+    """Compute Hit@5 (chunk_id-based) overall and by category. Deterministic.
+
+    Note: ground-truth chunk IDs in the synthetic dataset are placeholders
+    (e.g. 'c_042') that don't match real DB UUIDs. Use compute_substring_hit
+    as the real-data signal."""
     hit_by_cat: dict[str, float] = {}
     for cat in ["semantic", "keyword", "hybrid"]:
         cat_rows = [r for r in rows if r["category"] == cat]
@@ -273,6 +277,37 @@ def compute_hit_at_5(rows: list[dict]) -> dict[str, float]:
     hit_by_cat["overall"] = sum(overall_hits) / len(overall_hits) if overall_hits else 0.0
 
     return hit_by_cat
+
+
+def compute_substring_hit(rows: list[dict]) -> dict[str, float]:
+    """Deterministic answer-substring match: did the answer mention the
+    expected_answer_substring from the dataset?
+
+    This is the real-data alternative to chunk_id-based hit@5 — works on
+    actual production responses (synthetic chunk IDs in dataset are
+    placeholders, not real DB UUIDs).
+
+    Returns by-category and overall pass rate.
+    """
+    by_cat: dict[str, float] = {}
+    for cat in ["semantic", "keyword", "hybrid"]:
+        cat_rows = [r for r in rows if r["category"] == cat]
+        if not cat_rows:
+            continue
+        hits = [
+            (r.get("ground_truth", "") or "").lower() in (r.get("answer", "") or "").lower()
+            for r in cat_rows
+            if r.get("ground_truth")
+        ]
+        by_cat[cat] = sum(hits) / len(hits) if hits else 0.0
+
+    valid = [r for r in rows if r.get("ground_truth") and r.get("answer")]
+    all_hits = [
+        r["ground_truth"].lower() in r["answer"].lower()
+        for r in valid
+    ]
+    by_cat["overall"] = sum(all_hits) / len(all_hits) if all_hits else 0.0
+    return by_cat
 
 
 # ---------------------------------------------------------------------------
@@ -316,12 +351,20 @@ def run_ragas_evaluation(
         for r in valid_rows
     ])
 
-    # RunConfig: Groq handles parallel well (500+ tok/s), Gemini needs serial
-    # to survive free-tier RPM burst limits.
+    # RunConfig tuning per provider.
+    # Groq free tier 8B RPM is restrictive (~30/min). RAGAS parallel
+    # bursts trigger 429 storms that eat time in retries, so we serialize
+    # (max_workers=1) — slower per-step but fewer retries, net faster.
     if judge_provider == "groq":
-        run_config = RunConfig(max_retries=5, max_wait=30, max_workers=4)
+        run_config = RunConfig(max_retries=6, max_wait=30, max_workers=1)
     else:
         run_config = RunConfig(max_retries=8, max_wait=90, max_workers=1)
+
+    # Groq OpenAI-compatible endpoint rejects n>1 (OpenAI param for multiple
+    # generations per request). RAGAS's answer_relevancy defaults
+    # strictness=3 which sets n=3 — fatal 400. Force strictness=1 for Groq.
+    if judge_provider == "groq":
+        answer_relevancy.strictness = 1
 
     eval_kwargs = dict(
         dataset=ragas_ds,
@@ -355,6 +398,7 @@ async def run_full_benchmark(
     limit: int | None = None,
     mode: str = "hybrid",
     judge_provider: str = "groq",
+    pipeline_model_label: str | None = None,
 ) -> dict[str, Any]:
     """Run the complete benchmark: query backend, compute RAGAS + trust + hit@5.
 
@@ -365,6 +409,9 @@ async def run_full_benchmark(
         limit: number of queries to run (None = all 30)
         mode: "semantic" or "hybrid" (informational; toggle Railway HYBRID_ENABLED separately)
         judge_provider: "groq" (default, fast) / "gemini" (slow fallback) / "default" (OpenAI)
+        pipeline_model_label: explicit label for metadata.model (caller knows
+            what's actually deployed; the local GROQ_MODEL env may not match
+            Railway). Falls back to env var.
     """
     start_ts = time.time()
     rows = await collect_results(endpoint, dataset_path, limit=limit)
@@ -381,17 +428,21 @@ async def run_full_benchmark(
     # Trust distribution (deterministic, no LLM)
     trust_dist = compute_trust_metrics(rows)
 
-    # Hit@5 (deterministic, no LLM)
+    # Hit@5 (chunk_id, deterministic) — note: dataset uses placeholder IDs
     hit_at_5 = compute_hit_at_5(rows)
+    # Substring hit (real-data signal, deterministic)
+    substring_hit = compute_substring_hit(rows)
 
     elapsed = time.time() - start_ts
+
+    model_label = pipeline_model_label or os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
     return {
         "metadata": {
             "date": datetime.utcnow().isoformat() + "Z",
             "mode": mode,
             "endpoint": endpoint,
-            "model": os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+            "model": model_label,
             "judge_model": judge_label,
             "queries_count": len(rows),
             "elapsed_seconds": round(elapsed, 1),
@@ -403,6 +454,8 @@ async def run_full_benchmark(
         "trust_distribution": dict(trust_dist),
         "hit_at_5_by_category": hit_at_5,
         "hit_at_5_overall": hit_at_5.get("overall", 0.0),
+        "substring_hit_by_category": substring_hit,
+        "substring_hit_overall": substring_hit.get("overall", 0.0),
         "per_query": rows,
     }
 
@@ -423,6 +476,8 @@ def _main() -> int:
     ap.add_argument("--output", required=True, help="Output JSON path")
     ap.add_argument("--judge", choices=["groq", "gemini", "default"], default="groq",
                     help="RAGAS judge provider: groq (default, Llama 8B fast), gemini (Flash Lite fallback, slow), default (OpenAI; needs OPENAI_API_KEY)")
+    ap.add_argument("--pipeline-model", default=None,
+                    help="Explicit label for metadata.model (e.g. llama-3.1-8b-instant). Helpful when local GROQ_MODEL env doesn't match Railway state.")
     ap.add_argument("--verbose", "-v", action="store_true", help="DEBUG logging")
 
     args = ap.parse_args()
@@ -438,6 +493,7 @@ def _main() -> int:
         limit=args.limit,
         mode=args.mode,
         judge_provider=args.judge,
+        pipeline_model_label=args.pipeline_model,
     ))
 
     # Write output

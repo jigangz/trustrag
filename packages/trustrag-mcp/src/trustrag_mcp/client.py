@@ -31,18 +31,10 @@ class TrustRAGClient:
             resp.raise_for_status()
             return resp.json()
 
-    async def get_audit_log(
-        self,
-        limit: int = 10,
-        max_trust_score: int | None = None,
-        since_hours: int | None = None,
-    ) -> list[dict]:
-        params: dict = {"limit": limit}
-        if max_trust_score is not None:
-            params["max_trust_score"] = max_trust_score
-        if since_hours is not None:
-            params["since_hours"] = since_hours
+    async def get_audit_log(self, limit: int = 10) -> list[dict]:
+        # Backend /api/audit/ only accepts (limit, offset) — see OpenAPI spec.
+        # max_trust_score / since_hours filtering is applied client-side in server.py.
         async with httpx.AsyncClient(timeout=30, follow_redirects=True) as c:
-            resp = await c.get(f"{self.base_url}/api/audit/", params=params)
+            resp = await c.get(f"{self.base_url}/api/audit/", params={"limit": limit})
             resp.raise_for_status()
             return resp.json()

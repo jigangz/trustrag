@@ -154,19 +154,34 @@ pip install trustrag-eval
 | Integration | Package | Status |
 |-------------|---------|--------|
 | **LangChain** (Retriever + Tool + LangGraph Agent w/ trust budget) | `trustrag-langchain` | [v0.1.0](https://pypi.org/project/trustrag-langchain/) |
-| **MCP** (Claude Desktop, Cursor, Claude Code; 3 tools) | `trustrag-mcp` | [v0.1.1](https://pypi.org/project/trustrag-mcp/) |
+| **MCP** (Claude Desktop, Cursor, Claude Code; 3 tools) | `trustrag-mcp` | [v0.1.2](https://pypi.org/project/trustrag-mcp/) |
 | **RAGAS Eval Pipeline** (Groq + Gemini judge variants) | `trustrag-eval` | [v0.1.0](https://pypi.org/project/trustrag-eval/) |
 | **n8n Workflow Templates** | [integrations/n8n/](integrations/n8n/) | 3 workflows |
 
 ### MCP in Claude Desktop
 
-![Claude Desktop invoking trustrag_query](docs/mcp-demo.png)
+Three tools available end-to-end (verified live against production
+Railway with `trustrag-mcp 0.1.2` — full I/O log in
+[`docs/mcp-verification.md`](docs/mcp-verification.md)):
 
-Three tools available end-to-end (verified in Claude Desktop against
-production Railway):
-- `trustrag_query` — knowledge base lookup with trust score + citations
-- `trustrag_upload_document` — PDF ingestion to the backend
-- `trustrag_get_audit_log` — fetch low-trust query history for review
+- `trustrag_query` — knowledge base lookup with trust score + 4-factor breakdown + citations
+- `trustrag_upload_document` — PDF ingestion (parsed, chunked, embedded, indexed in pgvector)
+- `trustrag_get_audit_log` — fetch low-trust query history with client-side trust/time filtering
+
+Sample `trustrag_query` output (real, from production):
+
+```
+**Answer** (Trust: 72.8/100):
+According to the sources, OSHA requires fall protection for employees on a
+scaffold more than 10 feet above a lower level [Source: OSHA3150.pdf, page 41]...
+
+**Sources**:
+- OSHA3150.pdf (page 41, similarity 0.75)
+- OSHA3150.pdf (page 5, similarity 0.74)
+- OSHA3150.pdf (page 13, similarity 0.73)
+
+**Trust Breakdown**: {agreement: 18.1, retrieval: 74.2, source_count: 15.0, hallucination: 10.0}
+```
 
 Setup: add to `claude_desktop_config.json`:
 ```json

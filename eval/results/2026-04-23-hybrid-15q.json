@@ -1,0 +1,622 @@
+{
+  "metadata": {
+    "date": "2026-04-25T00:07:35.834154Z",
+    "mode": "hybrid",
+    "endpoint": "https://trustrag-production.up.railway.app",
+    "model": "llama-3.1-8b-instant",
+    "judge_model": "groq-llama-3.1-8b-instant",
+    "queries_count": 15,
+    "elapsed_seconds": 1838.2
+  },
+  "ragas_summary": {
+    "faithfulness": 0.37660221983530257,
+    "answer_relevancy": 0.5960169480401329,
+    "context_precision": 0.10119047618541667,
+    "context_recall": 0.2731292517006803
+  },
+  "ragas_per_query": [
+    {
+      "user_input": "What is the minimum height threshold for fall protection in construction?",
+      "retrieved_contexts": [
+        "height of employees. (g) Fall protection. (1) Each employee on a\nscaffold more than 10 feet (3.1 m) above a lower\nRegulatory Text 37\n(1926.451(g) continued) systems meeting the requirements of paragraph\n(g)(4) of this section. level shall be protected from falling to that lower\n(2) Effective Septemb",
+        "height of employees. (g) Fall protection. (1) Each employee on a\nscaffold more than 10 feet (3.1 m) above a lower\nRegulatory Text 37\n(1926.451(g) continued) systems meeting the requirements of paragraph\n(g)(4) of this section. level shall be protected from falling to that lower\n(2) Effective Septemb",
+        "The end points at each upright shall be\nbalusters or additional rails) are used, they shall not\nno more than 48 inches (1.3 m) apart. be more than 19 inches (48 cm) apart. (h) Falling object protection. (1) In addition\n(vii) Each toprail or equivalent member of a\nto wearing hardhats each employee on",
+        "The end points at each upright shall be\nbalusters or additional rails) are used, they shall not\nno more than 48 inches (1.3 m) apart. be more than 19 inches (48 cm) apart. (h) Falling object protection. (1) In addition\n(vii) Each toprail or equivalent member of a\nto wearing hardhats each employee on",
+        "Needle beam scaffold Personal fall arrest\nsystem 1926.451(g)(1)(iv)\nSelf-contained Both a personal fall\nFalling Object Protection\nadjustable scaffold arrest system and\nwhen supported a guardrail system What protections from overhead falling\nby ropes\nobjects do the standards require? Single-point and"
+      ],
+      "response": "The minimum height threshold for fall protection in construction is 10 feet (3.1 m) above a lower level, as per OSHA 1926.451(g)(1).",
+      "reference": "6 feet",
+      "faithfulness": 0.75,
+      "answer_relevancy": 0.8605787297120908,
+      "context_precision": 0.99999999995,
+      "context_recall": 0.0
+    },
+    {
+      "user_input": "How should employers protect workers from electrical hazards on job sites?",
+      "retrieved_contexts": [
+        "However equivalent d.c. voltage tests\nmay be used in lieu of the a.c. voltage specified in\nA92.2-1969; d.c. voltage tests which are approved\nRegulatory Text 47\nNon-Mandatory Appendices\n(1926.454(a) continued)\nNon-mandatory Appendix A to Subpart L \u2014\n(1) The nature of any electrical hazards, fall Scaf",
+        "However equivalent d.c. voltage tests\nmay be used in lieu of the a.c. voltage specified in\nA92.2-1969; d.c. voltage tests which are approved\nRegulatory Text 47\nNon-Mandatory Appendices\n(1926.454(a) continued)\nNon-mandatory Appendix A to Subpart L \u2014\n(1) The nature of any electrical hazards, fall Scaf",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a"
+      ],
+      "response": "Employers should use equivalent d.c. voltage tests in lieu of the a.c. voltage specified in A92.2-1969, as approved by the relevant authorities. Additionally, they should train employees to recognize electrical hazards and provide them with the correct procedures for dealing with electrical hazards and for erecting, maintaining, and disassembling fall protection systems and falling object protection systems. The training should include the nature of electrical hazards, the correct procedures for dealing with electrical hazards, the proper use of the scaffold, and the proper handling of materials on the scaffold. Furthermore, employers should have each employee involved in erecting, disassembling, moving, operating, repairing, maintaining, or inspecting a scaffold trained by a competent person to recognize any hazards associated with the work in question.",
+      "reference": "de-energize",
+      "faithfulness": 0.03571428571428571,
+      "answer_relevancy": 0.7656421401283967,
+      "context_precision": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "user_input": "What are the requirements for personal protective equipment in hazardous environments?",
+      "retrieved_contexts": [
+        "Needle beam scaffold Personal fall arrest\nsystem 1926.451(g)(1)(iv)\nSelf-contained Both a personal fall\nFalling Object Protection\nadjustable scaffold arrest system and\nwhen supported a guardrail system What protections from overhead falling\nby ropes\nobjects do the standards require? Single-point and",
+        "Needle beam scaffold Personal fall arrest\nsystem 1926.451(g)(1)(iv)\nSelf-contained Both a personal fall\nFalling Object Protection\nadjustable scaffold arrest system and\nwhen supported a guardrail system What protections from overhead falling\nby ropes\nobjects do the standards require? Single-point and",
+        "However equivalent d.c. voltage tests\nmay be used in lieu of the a.c. voltage specified in\nA92.2-1969; d.c. voltage tests which are approved\nRegulatory Text 47\nNon-Mandatory Appendices\n(1926.454(a) continued)\nNon-mandatory Appendix A to Subpart L \u2014\n(1) The nature of any electrical hazards, fall Scaf",
+        "However equivalent d.c. voltage tests\nmay be used in lieu of the a.c. voltage specified in\nA92.2-1969; d.c. voltage tests which are approved\nRegulatory Text 47\nNon-Mandatory Appendices\n(1926.454(a) continued)\nNon-mandatory Appendix A to Subpart L \u2014\n(1) The nature of any electrical hazards, fall Scaf",
+        "Construction Focused Inspection Guidelines 25\nThis guideline is to assist the compliance officer\nto determine if there is an effective project plan to qualify for a Focused Inspection. YES/NO\nPROJECT SAFETY AND HEALTH COORDINATION: Are there procedures in place by the\ngeneral contractor, prime contr"
+      ],
+      "response": "According to OSHA standards, personal protective equipment (PPE) is required in hazardous environments. In the context of scaffolding, employees must wear hard hats [Source: OSHA3150.pdf, p.13]. Additionally, employees must wear personal fall arrest systems with the lanyard attached to the boom or basket when operating aerial lifts [Source: OSHA3150.pdf, p.10]. Furthermore, employees involved in erecting, disassembling, moving, operating, repairing, maintaining, or inspecting scaffolds must be trained by a competent person to recognize hazards associated with the work in question [Source: OSHA3150.pdf, p.51].",
+      "reference": "PPE",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.8310243213651494,
+      "context_precision": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "user_input": "How do you prevent heat-related illnesses for outdoor workers?",
+      "retrieved_contexts": [
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "Excess sus-\ncontrol the loads shall be used. pension wire rope and any additional independent\n(10) Suspension ropes supporting adjustable\nlines from grounding shall be insulated;\nsuspension scaffolds shall be of a diameter large\n(ii) The suspension wire rope shall be covered\nenough to provide suffic"
+      ],
+      "response": "There is no direct information in the provided sources about preventing heat-related illnesses for outdoor workers. However, the sources do mention the importance of safety and health management systems, which can help prevent various hazards, including heat-related illnesses. According to Source 3, a safety and health management system can save time and money, and increase productivity. Additionally, Source 3 mentions that OSHA's consultation service provides free, onsite assistance in developing and implementing effective workplace safety and health management systems. However, the sources do not provide specific guidance on preventing heat-related illnesses for outdoor workers.",
+      "reference": "water",
+      "faithfulness": 0.8,
+      "answer_relevancy": 0.0,
+      "context_precision": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "user_input": "What training is required before workers enter confined spaces?",
+      "retrieved_contexts": [
+        "\u2022 No devices to raise the employee above the\nbasket floor can be used. 1926.453(b)\nSpecific Scaffold (\u00a71926.452) and Aerial Lift (\u00a71926.453) Requirements 10 Training Requirements \u00a71926.454\nWhat are the training standards for\nemployees who work on scaffolds? All employees who work on a scaffold must ",
+        "\u2022 No devices to raise the employee above the\nbasket floor can be used. 1926.453(b)\nSpecific Scaffold (\u00a71926.452) and Aerial Lift (\u00a71926.453) Requirements 10 Training Requirements \u00a71926.454\nWhat are the training standards for\nemployees who work on scaffolds? All employees who work on a scaffold must ",
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a"
+      ],
+      "response": "According to the provided sources, there is no information about training requirements for workers entering confined spaces. However, the sources do provide information about training requirements for employees working on scaffolds. All employees who work on a scaffold must be trained by a person qualified to recognize the hazards associated with the type of scaffold used and to understand the procedures to control and minimize those hazards. 1926.454(a). A competent person must train all employees who erect, disassemble, move, operate, repair, maintain, or inspect scaffolds. Training must cover the nature of the hazards, the correct procedures for erecting, disassembling, moving, operating, repairing, inspecting, and maintaining the type of scaffold in use. 1926.454(b).",
+      "reference": "permit",
+      "faithfulness": 0.21052631578947367,
+      "answer_relevancy": 0.0,
+      "context_precision": 0.0,
+      "context_recall": 0.8
+    },
+    {
+      "user_input": "How should hazardous chemicals be stored in the workplace?",
+      "retrieved_contexts": [
+        "Construction Focused Inspection Guidelines 25\nThis guideline is to assist the compliance officer\nto determine if there is an effective project plan to qualify for a Focused Inspection. YES/NO\nPROJECT SAFETY AND HEALTH COORDINATION: Are there procedures in place by the\ngeneral contractor, prime contr",
+        "Construction Focused Inspection Guidelines 25\nThis guideline is to assist the compliance officer\nto determine if there is an effective project plan to qualify for a Focused Inspection. YES/NO\nPROJECT SAFETY AND HEALTH COORDINATION: Are there procedures in place by the\ngeneral contractor, prime contr",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp"
+      ],
+      "response": "The answer to this question cannot be directly supported by the provided sources. However, based on the context of the provided documents, it appears that the question is not related to the topic of scaffolding or construction safety. The provided sources are related to OSHA guidelines and regulations for construction safety, specifically scaffolding. Therefore, the answer to the question about storing hazardous chemicals in the workplace is not directly supported by the provided sources.",
+      "reference": "labeled",
+      "faithfulness": 0.5,
+      "answer_relevancy": 0.0,
+      "context_precision": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "user_input": "What are the employer obligations for workplace injury recordkeeping?",
+      "retrieved_contexts": [
+        "The Occupa-\nconsultant. The employer\u2019s only obligation is to\ntional Safety and Health Act of 1970 (OSH Act)\ncorrect all identified serious hazards within the\nencourages states to develop and operate their own\nagreed upon correction time frame. OSHA provides\njob safety and health plans and permits st",
+        "The Occupa-\nconsultant. The employer\u2019s only obligation is to\ntional Safety and Health Act of 1970 (OSH Act)\ncorrect all identified serious hazards within the\nencourages states to develop and operate their own\nagreed upon correction time frame. OSHA provides\njob safety and health plans and permits st",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp"
+      ],
+      "response": "According to OSHA, employers are not obligated to report information about the workplace to OSHA enforcement staff when seeking consultation assistance [Source: OSHA3150.pdf, p.17]. The employer's only obligation is to correct all identified serious hazards within the agreed-upon correction time frame [Source: OSHA3150.pdf, p.17]. If an employer fails to eliminate or control a serious hazard within the agreed-upon time frame, the consultation project manager must refer the situation to the OSHA enforcement office for appropriate action [Source: OSHA3150.pdf, p.17].",
+      "reference": "OSHA 300",
+      "faithfulness": 0.3333333333333333,
+      "answer_relevancy": 0.6507093680242613,
+      "context_precision": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "user_input": "How should scaffolding be inspected before each work shift?",
+      "retrieved_contexts": [
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "General guidelines and tables. subpart. 2. Specific guidelines and tables. (c) When the employer has reason to believe that (a) Pole scaffolds:\nan employee lacks the skill or understanding Single-pole wood pole scaffolds. needed for safe work involving the erection, use or Independent wood pole scaf"
+      ],
+      "response": "A competent person must inspect the scaffold and scaffold components for visible defects before each work shift and after any occurrence that could affect the structural integrity. [Source: OSHA3150.pdf, p.5]",
+      "reference": "competent person",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.8094890413055033,
+      "context_precision": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "user_input": "What respiratory protection is needed when working with silica dust?",
+      "retrieved_contexts": [
+        "employee representatives, and others such as trade\nunions, trade and professional associations, univer-\nFor more information about this program,\nsities, and other government agencies. OSPPs are\ncontact your nearest OSHA office or go to the\nthe newest member of OSHA\u2019s family of\nagency website at www.",
+        "employee representatives, and others such as trade\nunions, trade and professional associations, univer-\nFor more information about this program,\nsities, and other government agencies. OSPPs are\ncontact your nearest OSHA office or go to the\nthe newest member of OSHA\u2019s family of\nagency website at www.",
+        "protection, and training for erectors and Appendix D serves as a guide to assist employ-\ndismantlers; and drawings of various types of ers when evaluating the training needs for employ-\nscaffolds and components. ees erecting or dismantling supported scaffolds. To summarize, Appendix A of Subpart L A",
+        "protection, and training for erectors and Appendix D serves as a guide to assist employ-\ndismantlers; and drawings of various types of ers when evaluating the training needs for employ-\nscaffolds and components. ees erecting or dismantling supported scaffolds. To summarize, Appendix A of Subpart L A",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a"
+      ],
+      "response": "Unfortunately, the provided sources do not mention respiratory protection for silica dust. However, according to the OSHA website, employers must provide respirators to employees who work with silica dust. For more information, please refer to the OSHA website at www.osha.gov or contact the OSHA Office of Training and Education.",
+      "reference": "respirator",
+      "faithfulness": 0.5,
+      "answer_relevancy": 0.8538207624367766,
+      "context_precision": 0.0,
+      "context_recall": 0.0
+    },
+    {
+      "user_input": "How do employers create an effective safety training program?",
+      "retrieved_contexts": [
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "cooperation. Yes. Under the consultation program, certain\nHow does VPP help employers and\nexemplary employers may request participation in\nemployees? OSHA\u2019s Safety and Health Achievement Recogni-\ntion Program (SHARP). Eligibility for participation\nVPP participation can mean the following:\nin SHARP i"
+      ],
+      "response": "To create an effective safety training program, employers should follow the four general elements identified in OSHA's recommended Safety and Health Program Management Guidelines: Management leadership and employee participation, worksite analysis, hazard prevention and control, and safety and health training. Employers can also receive assistance from OSHA's consultation service, which provides free, onsite assistance in developing and implementing effective workplace safety and health management systems. The guidelines recommend specific actions under each of these general elements to achieve an effective safety and health program. Additionally, employers can participate in OSHA's Voluntary Protection Programs (VPPs), which recognize exemplary employers who have implemented effective safety and health management systems and provide a framework for continuous improvement. [Source: OSHA3150.pdf, p.17] [Source: OSHA3150.pdf, p.18]",
+      "reference": "training",
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.7094215813530319,
+      "context_precision": 0.0,
+      "context_recall": 0.8571428571428571
+    },
+    {
+      "user_input": "OSHA 1926.501",
+      "retrieved_contexts": [
+        "1926.452(p)(1)\n1926.451(g)(4)(xiv) - To make swaged attachments or spliced eyes\n\u2022 For Suspension Scaffolds: on wire suspension ropes. 1926.451(d)(11)\n- To evaluate direct connections to support the \u2022 For Components and Design:\nload. 1926.451 (d)(3)(i) - To design scaffold components construction in\n",
+        "1926.452(p)(1)\n1926.451(g)(4)(xiv) - To make swaged attachments or spliced eyes\n\u2022 For Suspension Scaffolds: on wire suspension ropes. 1926.451(d)(11)\n- To evaluate direct connections to support the \u2022 For Components and Design:\nload. 1926.451 (d)(3)(i) - To design scaffold components construction in\n",
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "cooperation. Yes. Under the consultation program, certain\nHow does VPP help employers and\nexemplary employers may request participation in\nemployees? OSHA\u2019s Safety and Health Achievement Recogni-\ntion Program (SHARP). Eligibility for participation\nVPP participation can mean the following:\nin SHARP i"
+      ],
+      "response": "According to the provided sources, OSHA 1926.501 is not directly mentioned. However, it is mentioned that a registered professional engineer is required to perform certain duties in the following circumstances: designing scaffolds that are to be moved when employees are on them, designing pole scaffolds over 60 feet (18.3 meters) in height, designing tube and coupler scaffolds over 125 feet (38 meters) in height, and designing fabricated frame scaffolds over 125 feet (38 meters) in height above their base plates. [Source: OSHA3150.pdf, p.7] A competent person is required to perform the following duties: inspecting the scaffold and scaffold components for visible defects, determining the feasibility of providing a safe means of access and fall protection for erecting and dismantling supported scaffolds, and selecting and directing employees who erect, dismantle, move, or alter scaffolds. [Source: OSHA3150.pdf, p.5]",
+      "reference": "fall protection",
+      "faithfulness": 0.25,
+      "answer_relevancy": 0.8357996629603921,
+      "context_precision": 0.4166666666458333,
+      "context_recall": 0.3333333333333333
+    },
+    {
+      "user_input": "29 CFR 1910.134",
+      "retrieved_contexts": [
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "\u2022 In General: 29 CFR contains other standards that apply to\n- To design and load scaffolds in accordance construction work such as the responsibility to initiate\nwith that design. 1926.451(a)(6) and maintain programs (1926.29(b)(1)); exposures to\ndusts and chemicals (1926.33, .55, .59, .62, and\n.110",
+        "\u2022 In General: 29 CFR contains other standards that apply to\n- To design and load scaffolds in accordance construction work such as the responsibility to initiate\nwith that design. 1926.451(a)(6) and maintain programs (1926.29(b)(1)); exposures to\ndusts and chemicals (1926.33, .55, .59, .62, and\n.110",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a"
+      ],
+      "response": "The maximum deflection of a platform is 1/60 of the span when loaded. Each scaffold and scaffold component must support without failure its own weight and at least four times the maximum intended load applied or transmitted to it. A qualified person must design the scaffolds, which are loaded in accordance with that design. Scaffolds and scaffold components must not be loaded in excess of their maximum intended loads or rated capacities, whichever is less. Each scaffold platform and walkway must be at least 18 inches (46 centimeters) wide. When the work area is less than 18 inches (46 centimeters) wide, guardrails and/or personal fall arrest systems must be used. Each platform must be planked and decked as fully as possible with the space between the platform and uprights not more than 1 inch (2.5 centimeters) wide. The standard requires employers to protect each employee on a scaffold more than 10 feet (3.1 m) above a lower level from falling to that lower level. [Source: OSHA3150.pdf, page 7] [Source: OSHA3150.pdf, page 7]",
+      "reference": "respiratory",
+      "faithfulness": 0.25,
+      "answer_relevancy": 0.6291160016999325,
+      "context_precision": 0.0,
+      "context_recall": 1.0
+    },
+    {
+      "user_input": "OSHA Form 300A",
+      "retrieved_contexts": [
+        "18 OSHA-Approved Safety and Health Plans\nAlaska Maryland\nAlaska Department of Labor Maryland Division of Labor and Industry\nand Workforce Development Commissioner (410) 767-2999 Fax: (410) 767-2300\nCommissioner (907) 465-2700 Fax: (907) 465-2784 Deputy Commissioner (410) 767-2992\nProgram Director (9",
+        "18 OSHA-Approved Safety and Health Plans\nAlaska Maryland\nAlaska Department of Labor Maryland Division of Labor and Industry\nand Workforce Development Commissioner (410) 767-2999 Fax: (410) 767-2300\nCommissioner (907) 465-2700 Fax: (907) 465-2784 Deputy Commissioner (410) 767-2992\nProgram Director (9",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "OSHA\u2019s\nments, publications, audiovisual aids on workplace comprehensive publications program includes more\nhazards, and technical advice. than 100 titles to help you understand OSHA\nFor more information on grants, training, and requirements and programs. education, write: OSHA Training Institute, Of"
+      ],
+      "response": "OSHA Form 300A is a form used to record work-related injuries and illnesses. According to OSHA, employers with 10 or fewer employees are not required to keep an OSHA 300 log, but they must submit an OSHA Form 300A annually by February 1st. [Source: OSHA3150.pdf, p.5] The form is used to record work-related injuries and illnesses that occurred during the previous year. [Source: OSHA3150.pdf, p.20] OSHA awards grants through its Susan Harwood Grant Program to provide safety and health training and education to employers and workers in the workplace. [Source: OSHA3150.pdf, p.20] However, there is no information in the provided sources about OSHA Form 300A.",
+      "reference": "summary",
+      "faithfulness": 0.14285714285714285,
+      "answer_relevancy": 0.7795185776324599,
+      "context_precision": 0.0,
+      "context_recall": 0.8333333333333334
+    },
+    {
+      "user_input": "GHS hazard communication",
+      "retrieved_contexts": [
+        "Construction Focused Inspection Guidelines 25\nThis guideline is to assist the compliance officer\nto determine if there is an effective project plan to qualify for a Focused Inspection. YES/NO\nPROJECT SAFETY AND HEALTH COORDINATION: Are there procedures in place by the\ngeneral contractor, prime contr",
+        "Construction Focused Inspection Guidelines 25\nThis guideline is to assist the compliance officer\nto determine if there is an effective project plan to qualify for a Focused Inspection. YES/NO\nPROJECT SAFETY AND HEALTH COORDINATION: Are there procedures in place by the\ngeneral contractor, prime contr",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "The Occupa-\nconsultant. The employer\u2019s only obligation is to\ntional Safety and Health Act of 1970 (OSH Act)\ncorrect all identified serious hazards within the\nencourages states to develop and operate their own\nagreed upon correction time frame. OSHA provides\njob safety and health plans and permits st"
+      ],
+      "response": "According to OSHA's consultation service, employers who receive consultation assistance can be assured that their name and firm, along with information about the workplace, will not be routinely reported to OSHA enforcement staff. However, if an employer fails to eliminate or control a serious hazard within the agreed-upon time frame, the consultation project manager must refer the situation to the OSHA enforcement office for appropriate action. There is no direct information provided about GHS hazard communication in the sources.",
+      "reference": "label",
+      "faithfulness": 0.5,
+      "answer_relevancy": 0.6191170859438656,
+      "context_precision": 0.0,
+      "context_recall": 0.0
+    }
+  ],
+  "trust_distribution": {
+    "p25": 68.9,
+    "p50": 72.4,
+    "p75": 74.8,
+    "mean": 68.47333333333333,
+    "flagged_pct": 0.06666666666666667
+  },
+  "hit_at_5_by_category": {
+    "semantic": 0.0,
+    "keyword": 0.0,
+    "overall": 0.0
+  },
+  "hit_at_5_overall": 0.0,
+  "substring_hit_by_category": {
+    "semantic": 0.4,
+    "keyword": 0.2,
+    "overall": 0.35714285714285715
+  },
+  "substring_hit_overall": 0.35714285714285715,
+  "per_query": [
+    {
+      "question": "What is the minimum height threshold for fall protection in construction?",
+      "answer": "The minimum height threshold for fall protection in construction is 10 feet (3.1 m) above a lower level, as per OSHA 1926.451(g)(1).",
+      "contexts": [
+        "height of employees. (g) Fall protection. (1) Each employee on a\nscaffold more than 10 feet (3.1 m) above a lower\nRegulatory Text 37\n(1926.451(g) continued) systems meeting the requirements of paragraph\n(g)(4) of this section. level shall be protected from falling to that lower\n(2) Effective Septemb",
+        "height of employees. (g) Fall protection. (1) Each employee on a\nscaffold more than 10 feet (3.1 m) above a lower\nRegulatory Text 37\n(1926.451(g) continued) systems meeting the requirements of paragraph\n(g)(4) of this section. level shall be protected from falling to that lower\n(2) Effective Septemb",
+        "The end points at each upright shall be\nbalusters or additional rails) are used, they shall not\nno more than 48 inches (1.3 m) apart. be more than 19 inches (48 cm) apart. (h) Falling object protection. (1) In addition\n(vii) Each toprail or equivalent member of a\nto wearing hardhats each employee on",
+        "The end points at each upright shall be\nbalusters or additional rails) are used, they shall not\nno more than 48 inches (1.3 m) apart. be more than 19 inches (48 cm) apart. (h) Falling object protection. (1) In addition\n(vii) Each toprail or equivalent member of a\nto wearing hardhats each employee on",
+        "Needle beam scaffold Personal fall arrest\nsystem 1926.451(g)(1)(iv)\nSelf-contained Both a personal fall\nFalling Object Protection\nadjustable scaffold arrest system and\nwhen supported a guardrail system What protections from overhead falling\nby ropes\nobjects do the standards require? Single-point and"
+      ],
+      "ground_truth": "6 feet",
+      "trust_score": 83.2,
+      "category": "semantic",
+      "ground_truth_chunk_ids": [
+        "c_042",
+        "c_087"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "How should employers protect workers from electrical hazards on job sites?",
+      "answer": "Employers should use equivalent d.c. voltage tests in lieu of the a.c. voltage specified in A92.2-1969, as approved by the relevant authorities. Additionally, they should train employees to recognize electrical hazards and provide them with the correct procedures for dealing with electrical hazards and for erecting, maintaining, and disassembling fall protection systems and falling object protection systems. The training should include the nature of electrical hazards, the correct procedures for dealing with electrical hazards, the proper use of the scaffold, and the proper handling of materials on the scaffold. Furthermore, employers should have each employee involved in erecting, disassembling, moving, operating, repairing, maintaining, or inspecting a scaffold trained by a competent person to recognize any hazards associated with the work in question.",
+      "contexts": [
+        "However equivalent d.c. voltage tests\nmay be used in lieu of the a.c. voltage specified in\nA92.2-1969; d.c. voltage tests which are approved\nRegulatory Text 47\nNon-Mandatory Appendices\n(1926.454(a) continued)\nNon-mandatory Appendix A to Subpart L \u2014\n(1) The nature of any electrical hazards, fall Scaf",
+        "However equivalent d.c. voltage tests\nmay be used in lieu of the a.c. voltage specified in\nA92.2-1969; d.c. voltage tests which are approved\nRegulatory Text 47\nNon-Mandatory Appendices\n(1926.454(a) continued)\nNon-mandatory Appendix A to Subpart L \u2014\n(1) The nature of any electrical hazards, fall Scaf",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a"
+      ],
+      "ground_truth": "de-energize",
+      "trust_score": 72.4,
+      "category": "semantic",
+      "ground_truth_chunk_ids": [
+        "c_103",
+        "c_104"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "What are the requirements for personal protective equipment in hazardous environments?",
+      "answer": "According to OSHA standards, personal protective equipment (PPE) is required in hazardous environments. In the context of scaffolding, employees must wear hard hats [Source: OSHA3150.pdf, p.13]. Additionally, employees must wear personal fall arrest systems with the lanyard attached to the boom or basket when operating aerial lifts [Source: OSHA3150.pdf, p.10]. Furthermore, employees involved in erecting, disassembling, moving, operating, repairing, maintaining, or inspecting scaffolds must be trained by a competent person to recognize hazards associated with the work in question [Source: OSHA3150.pdf, p.51].",
+      "contexts": [
+        "Needle beam scaffold Personal fall arrest\nsystem 1926.451(g)(1)(iv)\nSelf-contained Both a personal fall\nFalling Object Protection\nadjustable scaffold arrest system and\nwhen supported a guardrail system What protections from overhead falling\nby ropes\nobjects do the standards require? Single-point and",
+        "Needle beam scaffold Personal fall arrest\nsystem 1926.451(g)(1)(iv)\nSelf-contained Both a personal fall\nFalling Object Protection\nadjustable scaffold arrest system and\nwhen supported a guardrail system What protections from overhead falling\nby ropes\nobjects do the standards require? Single-point and",
+        "However equivalent d.c. voltage tests\nmay be used in lieu of the a.c. voltage specified in\nA92.2-1969; d.c. voltage tests which are approved\nRegulatory Text 47\nNon-Mandatory Appendices\n(1926.454(a) continued)\nNon-mandatory Appendix A to Subpart L \u2014\n(1) The nature of any electrical hazards, fall Scaf",
+        "However equivalent d.c. voltage tests\nmay be used in lieu of the a.c. voltage specified in\nA92.2-1969; d.c. voltage tests which are approved\nRegulatory Text 47\nNon-Mandatory Appendices\n(1926.454(a) continued)\nNon-mandatory Appendix A to Subpart L \u2014\n(1) The nature of any electrical hazards, fall Scaf",
+        "Construction Focused Inspection Guidelines 25\nThis guideline is to assist the compliance officer\nto determine if there is an effective project plan to qualify for a Focused Inspection. YES/NO\nPROJECT SAFETY AND HEALTH COORDINATION: Are there procedures in place by the\ngeneral contractor, prime contr"
+      ],
+      "ground_truth": "PPE",
+      "trust_score": 62.7,
+      "category": "semantic",
+      "ground_truth_chunk_ids": [
+        "c_055",
+        "c_056"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "How do you prevent heat-related illnesses for outdoor workers?",
+      "answer": "There is no direct information in the provided sources about preventing heat-related illnesses for outdoor workers. However, the sources do mention the importance of safety and health management systems, which can help prevent various hazards, including heat-related illnesses. According to Source 3, a safety and health management system can save time and money, and increase productivity. Additionally, Source 3 mentions that OSHA's consultation service provides free, onsite assistance in developing and implementing effective workplace safety and health management systems. However, the sources do not provide specific guidance on preventing heat-related illnesses for outdoor workers.",
+      "contexts": [
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "Excess sus-\ncontrol the loads shall be used. pension wire rope and any additional independent\n(10) Suspension ropes supporting adjustable\nlines from grounding shall be insulated;\nsuspension scaffolds shall be of a diameter large\n(ii) The suspension wire rope shall be covered\nenough to provide suffic"
+      ],
+      "ground_truth": "water",
+      "trust_score": 68.9,
+      "category": "semantic",
+      "ground_truth_chunk_ids": [
+        "c_120",
+        "c_121"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "What training is required before workers enter confined spaces?",
+      "answer": "According to the provided sources, there is no information about training requirements for workers entering confined spaces. However, the sources do provide information about training requirements for employees working on scaffolds. All employees who work on a scaffold must be trained by a person qualified to recognize the hazards associated with the type of scaffold used and to understand the procedures to control and minimize those hazards. 1926.454(a). A competent person must train all employees who erect, disassemble, move, operate, repair, maintain, or inspect scaffolds. Training must cover the nature of the hazards, the correct procedures for erecting, disassembling, moving, operating, repairing, inspecting, and maintaining the type of scaffold in use. 1926.454(b).",
+      "contexts": [
+        "\u2022 No devices to raise the employee above the\nbasket floor can be used. 1926.453(b)\nSpecific Scaffold (\u00a71926.452) and Aerial Lift (\u00a71926.453) Requirements 10 Training Requirements \u00a71926.454\nWhat are the training standards for\nemployees who work on scaffolds? All employees who work on a scaffold must ",
+        "\u2022 No devices to raise the employee above the\nbasket floor can be used. 1926.453(b)\nSpecific Scaffold (\u00a71926.452) and Aerial Lift (\u00a71926.453) Requirements 10 Training Requirements \u00a71926.454\nWhat are the training standards for\nemployees who work on scaffolds? All employees who work on a scaffold must ",
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a"
+      ],
+      "ground_truth": "permit",
+      "trust_score": 74.8,
+      "category": "semantic",
+      "ground_truth_chunk_ids": [
+        "c_078",
+        "c_079"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "How should hazardous chemicals be stored in the workplace?",
+      "answer": "The answer to this question cannot be directly supported by the provided sources. However, based on the context of the provided documents, it appears that the question is not related to the topic of scaffolding or construction safety. The provided sources are related to OSHA guidelines and regulations for construction safety, specifically scaffolding. Therefore, the answer to the question about storing hazardous chemicals in the workplace is not directly supported by the provided sources.",
+      "contexts": [
+        "Construction Focused Inspection Guidelines 25\nThis guideline is to assist the compliance officer\nto determine if there is an effective project plan to qualify for a Focused Inspection. YES/NO\nPROJECT SAFETY AND HEALTH COORDINATION: Are there procedures in place by the\ngeneral contractor, prime contr",
+        "Construction Focused Inspection Guidelines 25\nThis guideline is to assist the compliance officer\nto determine if there is an effective project plan to qualify for a Focused Inspection. YES/NO\nPROJECT SAFETY AND HEALTH COORDINATION: Are there procedures in place by the\ngeneral contractor, prime contr",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp"
+      ],
+      "ground_truth": "labeled",
+      "trust_score": 71.0,
+      "category": "semantic",
+      "ground_truth_chunk_ids": [
+        "c_091",
+        "c_092"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "What are the employer obligations for workplace injury recordkeeping?",
+      "answer": "According to OSHA, employers are not obligated to report information about the workplace to OSHA enforcement staff when seeking consultation assistance [Source: OSHA3150.pdf, p.17]. The employer's only obligation is to correct all identified serious hazards within the agreed-upon correction time frame [Source: OSHA3150.pdf, p.17]. If an employer fails to eliminate or control a serious hazard within the agreed-upon time frame, the consultation project manager must refer the situation to the OSHA enforcement office for appropriate action [Source: OSHA3150.pdf, p.17].",
+      "contexts": [
+        "The Occupa-\nconsultant. The employer\u2019s only obligation is to\ntional Safety and Health Act of 1970 (OSH Act)\ncorrect all identified serious hazards within the\nencourages states to develop and operate their own\nagreed upon correction time frame. OSHA provides\njob safety and health plans and permits st",
+        "The Occupa-\nconsultant. The employer\u2019s only obligation is to\ntional Safety and Health Act of 1970 (OSH Act)\ncorrect all identified serious hazards within the\nencourages states to develop and operate their own\nagreed upon correction time frame. OSHA provides\njob safety and health plans and permits st",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp"
+      ],
+      "ground_truth": "OSHA 300",
+      "trust_score": 72.8,
+      "category": "semantic",
+      "ground_truth_chunk_ids": [
+        "c_130",
+        "c_131"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "How should scaffolding be inspected before each work shift?",
+      "answer": "A competent person must inspect the scaffold and scaffold components for visible defects before each work shift and after any occurrence that could affect the structural integrity. [Source: OSHA3150.pdf, p.5]",
+      "contexts": [
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "General guidelines and tables. subpart. 2. Specific guidelines and tables. (c) When the employer has reason to believe that (a) Pole scaffolds:\nan employee lacks the skill or understanding Single-pole wood pole scaffolds. needed for safe work involving the erection, use or Independent wood pole scaf"
+      ],
+      "ground_truth": "competent person",
+      "trust_score": 80.3,
+      "category": "semantic",
+      "ground_truth_chunk_ids": [
+        "c_044",
+        "c_045"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "What respiratory protection is needed when working with silica dust?",
+      "answer": "Unfortunately, the provided sources do not mention respiratory protection for silica dust. However, according to the OSHA website, employers must provide respirators to employees who work with silica dust. For more information, please refer to the OSHA website at www.osha.gov or contact the OSHA Office of Training and Education.",
+      "contexts": [
+        "employee representatives, and others such as trade\nunions, trade and professional associations, univer-\nFor more information about this program,\nsities, and other government agencies. OSPPs are\ncontact your nearest OSHA office or go to the\nthe newest member of OSHA\u2019s family of\nagency website at www.",
+        "employee representatives, and others such as trade\nunions, trade and professional associations, univer-\nFor more information about this program,\nsities, and other government agencies. OSPPs are\ncontact your nearest OSHA office or go to the\nthe newest member of OSHA\u2019s family of\nagency website at www.",
+        "protection, and training for erectors and Appendix D serves as a guide to assist employ-\ndismantlers; and drawings of various types of ers when evaluating the training needs for employ-\nscaffolds and components. ees erecting or dismantling supported scaffolds. To summarize, Appendix A of Subpart L A",
+        "protection, and training for erectors and Appendix D serves as a guide to assist employ-\ndismantlers; and drawings of various types of ers when evaluating the training needs for employ-\nscaffolds and components. ees erecting or dismantling supported scaffolds. To summarize, Appendix A of Subpart L A",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a"
+      ],
+      "ground_truth": "respirator",
+      "trust_score": 71.8,
+      "category": "semantic",
+      "ground_truth_chunk_ids": [
+        "c_110",
+        "c_111"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "How do employers create an effective safety training program?",
+      "answer": "To create an effective safety training program, employers should follow the four general elements identified in OSHA's recommended Safety and Health Program Management Guidelines: Management leadership and employee participation, worksite analysis, hazard prevention and control, and safety and health training. Employers can also receive assistance from OSHA's consultation service, which provides free, onsite assistance in developing and implementing effective workplace safety and health management systems. The guidelines recommend specific actions under each of these general elements to achieve an effective safety and health program. Additionally, employers can participate in OSHA's Voluntary Protection Programs (VPPs), which recognize exemplary employers who have implemented effective safety and health management systems and provide a framework for continuous improvement. [Source: OSHA3150.pdf, p.17] [Source: OSHA3150.pdf, p.18]",
+      "contexts": [
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "cooperation. Yes. Under the consultation program, certain\nHow does VPP help employers and\nexemplary employers may request participation in\nemployees? OSHA\u2019s Safety and Health Achievement Recogni-\ntion Program (SHARP). Eligibility for participation\nVPP participation can mean the following:\nin SHARP i"
+      ],
+      "ground_truth": "training",
+      "trust_score": 80.0,
+      "category": "semantic",
+      "ground_truth_chunk_ids": [
+        "c_140",
+        "c_141"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "OSHA 1926.501",
+      "answer": "According to the provided sources, OSHA 1926.501 is not directly mentioned. However, it is mentioned that a registered professional engineer is required to perform certain duties in the following circumstances: designing scaffolds that are to be moved when employees are on them, designing pole scaffolds over 60 feet (18.3 meters) in height, designing tube and coupler scaffolds over 125 feet (38 meters) in height, and designing fabricated frame scaffolds over 125 feet (38 meters) in height above their base plates. [Source: OSHA3150.pdf, p.7] A competent person is required to perform the following duties: inspecting the scaffold and scaffold components for visible defects, determining the feasibility of providing a safe means of access and fall protection for erecting and dismantling supported scaffolds, and selecting and directing employees who erect, dismantle, move, or alter scaffolds. [Source: OSHA3150.pdf, p.5]",
+      "contexts": [
+        "1926.452(p)(1)\n1926.451(g)(4)(xiv) - To make swaged attachments or spliced eyes\n\u2022 For Suspension Scaffolds: on wire suspension ropes. 1926.451(d)(11)\n- To evaluate direct connections to support the \u2022 For Components and Design:\nload. 1926.451 (d)(3)(i) - To design scaffold components construction in\n",
+        "1926.452(p)(1)\n1926.451(g)(4)(xiv) - To make swaged attachments or spliced eyes\n\u2022 For Suspension Scaffolds: on wire suspension ropes. 1926.451(d)(11)\n- To evaluate direct connections to support the \u2022 For Components and Design:\nload. 1926.451 (d)(3)(i) - To design scaffold components construction in\n",
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "How to Use This Booklet Summary and Explanation of the Final Rule 1\nWhat are the highlights of the scaffolding \u2022 Training\u2014Employers must train each employee\nstandard? who works on a scaffold on the hazards and the\nprocedures to control the hazards. 1926.454\nOSHA\u2019s scaffolding standard has several ke",
+        "cooperation. Yes. Under the consultation program, certain\nHow does VPP help employers and\nexemplary employers may request participation in\nemployees? OSHA\u2019s Safety and Health Achievement Recogni-\ntion Program (SHARP). Eligibility for participation\nVPP participation can mean the following:\nin SHARP i"
+      ],
+      "ground_truth": "fall protection",
+      "trust_score": 74.8,
+      "category": "keyword",
+      "ground_truth_chunk_ids": [
+        "c_042"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "29 CFR 1910.134",
+      "answer": "The maximum deflection of a platform is 1/60 of the span when loaded. Each scaffold and scaffold component must support without failure its own weight and at least four times the maximum intended load applied or transmitted to it. A qualified person must design the scaffolds, which are loaded in accordance with that design. Scaffolds and scaffold components must not be loaded in excess of their maximum intended loads or rated capacities, whichever is less. Each scaffold platform and walkway must be at least 18 inches (46 centimeters) wide. When the work area is less than 18 inches (46 centimeters) wide, guardrails and/or personal fall arrest systems must be used. Each platform must be planked and decked as fully as possible with the space between the platform and uprights not more than 1 inch (2.5 centimeters) wide. The standard requires employers to protect each employee on a scaffold more than 10 feet (3.1 m) above a lower level from falling to that lower level. [Source: OSHA3150.pdf, page 7] [Source: OSHA3150.pdf, page 7]",
+      "contexts": [
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "A Guide to\nScaffold Use in the\nConstruction Industry\nSmall Business Safety Management Series\nOSHA 3150\n2002 (Revised) This informational booklet is intended to provide\na generic, non-exhaustive overview of a particular\nstandards-related topic. This publication does not\nitself alter or determine comp",
+        "\u2022 In General: 29 CFR contains other standards that apply to\n- To design and load scaffolds in accordance construction work such as the responsibility to initiate\nwith that design. 1926.451(a)(6) and maintain programs (1926.29(b)(1)); exposures to\ndusts and chemicals (1926.33, .55, .59, .62, and\n.110",
+        "\u2022 In General: 29 CFR contains other standards that apply to\n- To design and load scaffolds in accordance construction work such as the responsibility to initiate\nwith that design. 1926.451(a)(6) and maintain programs (1926.29(b)(1)); exposures to\ndusts and chemicals (1926.33, .55, .59, .62, and\n.110",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a"
+      ],
+      "ground_truth": "respiratory",
+      "trust_score": 67.8,
+      "category": "keyword",
+      "ground_truth_chunk_ids": [
+        "c_110"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "OSHA Form 300A",
+      "answer": "OSHA Form 300A is a form used to record work-related injuries and illnesses. According to OSHA, employers with 10 or fewer employees are not required to keep an OSHA 300 log, but they must submit an OSHA Form 300A annually by February 1st. [Source: OSHA3150.pdf, p.5] The form is used to record work-related injuries and illnesses that occurred during the previous year. [Source: OSHA3150.pdf, p.20] OSHA awards grants through its Susan Harwood Grant Program to provide safety and health training and education to employers and workers in the workplace. [Source: OSHA3150.pdf, p.20] However, there is no information in the provided sources about OSHA Form 300A.",
+      "contexts": [
+        "18 OSHA-Approved Safety and Health Plans\nAlaska Maryland\nAlaska Department of Labor Maryland Division of Labor and Industry\nand Workforce Development Commissioner (410) 767-2999 Fax: (410) 767-2300\nCommissioner (907) 465-2700 Fax: (907) 465-2784 Deputy Commissioner (410) 767-2992\nProgram Director (9",
+        "18 OSHA-Approved Safety and Health Plans\nAlaska Maryland\nAlaska Department of Labor Maryland Division of Labor and Industry\nand Workforce Development Commissioner (410) 767-2999 Fax: (410) 767-2300\nCommissioner (907) 465-2700 Fax: (907) 465-2784 Deputy Commissioner (410) 767-2992\nProgram Director (9",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "It is all part of the agency\u2019s effort\nand women across the United States. To do so, the to provide guidance to employers who need help in\nagency sets federal standards1 for general industry, complying with OSHA\u2019s standards to protect the\nconstruction, and shipyard employment. OSHA also working men a",
+        "OSHA\u2019s\nments, publications, audiovisual aids on workplace comprehensive publications program includes more\nhazards, and technical advice. than 100 titles to help you understand OSHA\nFor more information on grants, training, and requirements and programs. education, write: OSHA Training Institute, Of"
+      ],
+      "ground_truth": "summary",
+      "trust_score": 74.6,
+      "category": "keyword",
+      "ground_truth_chunk_ids": [
+        "c_130"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "question": "1926.451 scaffolding",
+      "answer": "",
+      "contexts": [],
+      "ground_truth": "scaffold",
+      "trust_score": 0,
+      "category": "keyword",
+      "ground_truth_chunk_ids": [
+        "c_044"
+      ],
+      "retrieved_chunk_ids": []
+    },
+    {
+      "question": "GHS hazard communication",
+      "answer": "According to OSHA's consultation service, employers who receive consultation assistance can be assured that their name and firm, along with information about the workplace, will not be routinely reported to OSHA enforcement staff. However, if an employer fails to eliminate or control a serious hazard within the agreed-upon time frame, the consultation project manager must refer the situation to the OSHA enforcement office for appropriate action. There is no direct information provided about GHS hazard communication in the sources.",
+      "contexts": [
+        "Construction Focused Inspection Guidelines 25\nThis guideline is to assist the compliance officer\nto determine if there is an effective project plan to qualify for a Focused Inspection. YES/NO\nPROJECT SAFETY AND HEALTH COORDINATION: Are there procedures in place by the\ngeneral contractor, prime contr",
+        "Construction Focused Inspection Guidelines 25\nThis guideline is to assist the compliance officer\nto determine if there is an effective project plan to qualify for a Focused Inspection. YES/NO\nPROJECT SAFETY AND HEALTH COORDINATION: Are there procedures in place by the\ngeneral contractor, prime contr",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "safety and health management system forms the\nbasis of good worker protection and can save time In addition to helping employers identify and\nand money\u2014about $4 for every dollar spent\u2014and correct specific hazards, OSHA\u2019s consultation\nincrease productivity. service provides free, onsite assistance in",
+        "The Occupa-\nconsultant. The employer\u2019s only obligation is to\ntional Safety and Health Act of 1970 (OSH Act)\ncorrect all identified serious hazards within the\nencourages states to develop and operate their own\nagreed upon correction time frame. OSHA provides\njob safety and health plans and permits st"
+      ],
+      "ground_truth": "label",
+      "trust_score": 72.0,
+      "category": "keyword",
+      "ground_truth_chunk_ids": [
+        "c_091"
+      ],
+      "retrieved_chunk_ids": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    }
+  ]
+}

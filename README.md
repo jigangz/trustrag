@@ -80,23 +80,43 @@ graph TD
     style N fill:#90ee90,stroke:#333,stroke-width:2px
 ```
 
+## Live Demo
+
+- **Frontend**: https://trustrag.vercel.app
+- **Backend**: https://trustrag-production.up.railway.app
+- **Health probe**: `/health` (HEAD + GET both 200)
+
+Pipeline runs Llama 3.3 70B Versatile via Groq, with merged
+self-check (HTTP path) and Postgres-backed query cache. Optimized to
+**5-10s cache-miss / sub-300ms cache-hit** on Railway free tier
+(1GB RAM, 0.5 vCPU) via embedding cleanup + cache + UptimeRobot keep-alive.
+[Latency engineering details →](docs/superpowers/specs/2026-04-21-trustrag-v2-completion-design.md)
+
 ## Benchmarks
 
-Measured on 30-query synthetic construction-safety dataset (10 semantic / 10 keyword / 10 hybrid):
+Measured 2026-04-23 on 15-query synthetic construction-safety subset
+(5 semantic + 5 keyword + 5 hybrid). Pipeline ran on
+`llama-3.1-8b-instant` due to 70B daily-quota exhaustion that day;
+RAGAS judged by Groq 8B for free-tier-friendly throughput.
 
-| Metric | Semantic-only | Hybrid (RRF k=60) | Delta |
-|--------|---------------|-------------------|-------|
-| Hit@5 (overall) | 73% | **89%** | +16pp |
-| Hit@5 (keyword queries) | 50% | **95%** | +45pp |
-| Hit@5 (semantic queries) | 90% | 90% | 0pp |
-| Faithfulness (RAGAS) | 0.81 | **0.87** | +0.06 |
-| Answer Relevancy | 0.85 | **0.88** | +0.03 |
-| Context Precision | 0.72 | **0.84** | +0.12 |
-| Context Recall | 0.78 | **0.91** | +0.13 |
-| Trust Score (median) | 72 | **81** | +9 |
-| Flagged Rate (<50) | 18% | **8%** | -10pp |
+| Metric | Semantic-only | Hybrid (RRF k=60) | Δ |
+|--------|--------------:|------------------:|--:|
+| RAGAS Faithfulness | 0.241 | **0.377** | **+13.6pp ✓** |
+| RAGAS Answer Relevancy | 0.729 | 0.596 | -13.3pp |
+| RAGAS Context Precision | 0.128 | 0.101 | -2.7pp |
+| RAGAS Context Recall | 0.377 | 0.273 | -10.4pp |
+| Substring Match (overall) | 0.333 | **0.357** | **+2.4pp ✓** |
+| ↳ Semantic-leaning q | 0.300 | **0.400** | **+10pp ✓** |
+| ↳ Keyword-leaning q | 0.400 | 0.200 | -20pp |
 
-Full results: [`eval/results/`](eval/results/)
+**Honest read**: hybrid genuinely improves *faithfulness* (less
+hallucination, +13.6pp) and *substring match on semantic queries*
+(+10pp). Keyword-query degradation reflects 8B's difficulty
+synthesizing from broader RRF retrieval — likely closes on 70B.
+Sample is small (14-15q valid each side); deltas have ±5-10pp noise.
+
+See [`docs/releases/v0.3.0-hybrid.md`](docs/releases/v0.3.0-hybrid.md)
+for full methodology + raw JSONs in [`eval/results/`](eval/results/).
 
 ## Quick Start
 
@@ -133,10 +153,35 @@ pip install trustrag-eval
 
 | Integration | Package | Status |
 |-------------|---------|--------|
-| **LangChain** (Retriever + Tool + LangGraph Agent) | `trustrag-langchain` | v0.1.0 |
-| **MCP** (Claude Desktop, Cursor, Claude Code) | `trustrag-mcp` | v0.1.0 |
-| **RAGAS Eval Pipeline** | `trustrag-eval` | v0.1.0 |
+| **LangChain** (Retriever + Tool + LangGraph Agent w/ trust budget) | `trustrag-langchain` | [v0.1.0](https://pypi.org/project/trustrag-langchain/) |
+| **MCP** (Claude Desktop, Cursor, Claude Code; 3 tools) | `trustrag-mcp` | [v0.1.1](https://pypi.org/project/trustrag-mcp/) |
+| **RAGAS Eval Pipeline** (Groq + Gemini judge variants) | `trustrag-eval` | [v0.1.0](https://pypi.org/project/trustrag-eval/) |
 | **n8n Workflow Templates** | [integrations/n8n/](integrations/n8n/) | 3 workflows |
+
+### MCP in Claude Desktop
+
+![Claude Desktop invoking trustrag_query](docs/mcp-demo.png)
+
+Three tools available end-to-end (verified in Claude Desktop against
+production Railway):
+- `trustrag_query` — knowledge base lookup with trust score + citations
+- `trustrag_upload_document` — PDF ingestion to the backend
+- `trustrag_get_audit_log` — fetch low-trust query history for review
+
+Setup: add to `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "trustrag": {
+      "command": "uvx",
+      "args": ["trustrag-mcp"],
+      "env": { "TRUSTRAG_BACKEND_URL": "https://trustrag-production.up.railway.app" }
+    }
+  }
+}
+```
+
+See [`docs/releases/v0.5.0-mcp.md`](docs/releases/v0.5.0-mcp.md) for details.
 
 ## API Endpoints
 
@@ -152,8 +197,18 @@ pip install trustrag-eval
 
 ## Documentation
 
-- [Design Spec](docs/superpowers/specs/2026-04-20-trustrag-v2-enhancement-design.md)
+- [v0.2 Enhancement Design](docs/superpowers/specs/2026-04-20-trustrag-v2-enhancement-design.md)
+- [v2 Completion Design (latency + benchmark + release)](docs/superpowers/specs/2026-04-21-trustrag-v2-completion-design.md)
+- [Implementation Plan (11 tasks)](docs/superpowers/plans/2026-04-21-trustrag-v2-completion.md)
 - [Benchmark Results](eval/results/)
+
+## Releases
+
+- [v0.2.0-streaming](https://github.com/jigangz/trustrag/releases/tag/v0.2.0-streaming) — WebSocket streaming
+- [v0.3.0-hybrid](https://github.com/jigangz/trustrag/releases/tag/v0.3.0-hybrid) — Hybrid retrieval (measured)
+- [v0.4.0-langchain](https://github.com/jigangz/trustrag/releases/tag/v0.4.0-langchain) — LangChain + LangGraph agent
+- [v0.5.0-mcp](https://github.com/jigangz/trustrag/releases/tag/v0.5.0-mcp) — MCP Claude Desktop demo
+- [v1.0.0](https://github.com/jigangz/trustrag/releases/tag/v1.0.0) — Production-grade
 
 ## License
 
